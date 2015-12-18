@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "tcp_client::recv(char*, unsigned long):tcp_client.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "errno">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "http_data::initialize_properties():http_data.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "tcp_connection::server_receive(kevent&amp;):tcp_connection.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "http_data::append(std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;):http_data.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "tcp_connection::handle_server_read(kevent&amp;, bool):tcp_connection.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "to_sent.c_str()">
+            </PersistentString>
+            <PersistentString
+               value = "to_sent.size()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "tcp_connection::client_receive(kevent&amp;):tcp_connection.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "request.size()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "http_data::get_body() const:http_data.hpp">
+      </ContextState>
+      <ContextState
+         contextName = "tcp_connection::init_server(event_queue*, http_data const&amp;):tcp_connection.cpp">
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
