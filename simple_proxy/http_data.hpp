@@ -17,7 +17,7 @@ public:
     enum class State {READING_HEADER, READING_BODY, COMPLETE};
     enum class Type {UNDEFINED, RESPONCE, GET, CHUNKED, CONTENT};
     
-    http_data(std::string initial, Type type = Type::UNDEFINED);
+    http_data(std::string initial = std::string(), Type type = Type::UNDEFINED);
 
     void append(std::string chunk);
     
@@ -26,10 +26,8 @@ public:
         body.clear();
         type = Type::UNDEFINED;
         state = State::READING_HEADER;
-    }
-    
-    bool is_keep_alive() const{
-        return keep_alive;
+        
+        content_length = 0;
     }
     
     size_t get_content_length() const{
@@ -61,15 +59,9 @@ private:
     std::string header{};
     std::string body{};
     ssize_t content_length = 0;
-    bool keep_alive = false;
-    
-    bool header_complete = false;
-    bool is_complete = false;
-    
     
     void transform_to_relative();
     
-    void parse_keep_alive();
     void parse_content_length();
     void parse_is_chunked_encoding();
     void initialize_properties();

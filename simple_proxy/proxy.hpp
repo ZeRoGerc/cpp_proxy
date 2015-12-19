@@ -16,20 +16,12 @@
 struct proxy {
 public:
     proxy(event_queue* queue, int descriptor);
-
-    handler connect_handle = [&](struct kevent& event) {
-        tcp_connection* conn = new tcp_connection(queue, descriptor);
-        
-        conn->set_client_handler([conn](struct kevent& event) {
-            conn->handle_client_read(event);
-        });
-
-        queue->add_event(conn->get_client_socket(), EVFILT_READ, conn->get_client_handler());
-    };
-
+    proxy(const proxy&) = delete;
     void main_loop();
     
+    tasks_pull _pull;
 private:
+    handler connect_handler;
     event_queue* queue;
     int descriptor;
 };

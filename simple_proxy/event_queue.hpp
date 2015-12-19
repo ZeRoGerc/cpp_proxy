@@ -25,25 +25,30 @@ int get_id(struct kevent event);
 
 struct event_queue {
 public:
+    static const int USER_EVENT_ID = 1242323;
+    
     event_queue(int main_socket);
 
     int delete_event(size_t ident, uint16_t filter);
 
     void add_event(int sock, uint16_t filter, handler* hand);
 
-    void add_signal_listener(int signal_id);
-
+    void trigger_user_event(handler hand);
+    
+    void delete_trigger_event();
+    
     int occured();
 
     void execute();
     
 private:
 //    static const int MAX_CONN = 1024;
-    struct kevent temp_event;
     struct kevent evlist[SOMAXCONN];
     std::vector<bool> is_used = std::vector<bool>(SOMAXCONN);
     int kq;
     int main_socket;
+    
+    handler user_event_handler;
 };
 
 #endif /* event_queue_hpp */

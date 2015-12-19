@@ -20,13 +20,13 @@ tcp_connection::tcp_connection(event_queue* q, int descriptor) {
 }
 
 
-void tcp_connection::init_server(event_queue* q, http_data const& request) {
+void tcp_connection::init_server(event_queue* q) {
     queue = q;
     
-    size_t port = request.get_port();
+    size_t port = this->buffer.get_port();
     
     //check if new server different to previous
-    std::string host = request.get_host();
+    std::string host = this->buffer.get_host();
     if (server && !(server->get_host() == host)) {
         safe_server_disconnect();
     }
@@ -65,55 +65,76 @@ void tcp_connection::safe_client_disconnect() {
     client->disconnect();
 }
 
-void tcp_connection::receive_from_client(struct kevent& event) {
-    http_data request{std::string()};
+void tcp_connection::safe_disconnect() {
+    delete this;
+}
+
+void tcp_connection::get_http_request(struct kevent& event) {
+    std::string chunk = client->read(BUFFER_SIZE);
     
-    while (true) {
-        request.append(client->read(BUFFER_SIZE));
-        if (request.get_state() == http_data::State::COMPLETE) {
-            break;
+    //For sure, that two threads can not write to request in one time
+    queue->delete_event(get_client_socket(), EVFILT_READ);
+    
+//    handler finish_init{
+//        [this](struct kevent& event) {
+//            this->finish_server_initialization(this->queue);
+//            std::cerr << "WORKED\n";
+//        }};
+//    
+//    
+    task get_http_info = [this, chunk]() {
+        std::cerr << "#############################################\n" << chunk << "\n###################################\n";
+        this->buffer.append(chunk);
+        if (this->buffer.get_state() == http_data::State::COMPLETE) {
+            std::cerr << "ZASHOL\n";
+            this->finish_server_initialization(this->queue);
+//            this->queue->trigger_user_event(finish_init);
+        } else {
+            this->queue->add_event(this->get_client_socket(), EVFILT_READ, &this->client_read);
         }
-    }
-    std::cout << request.get_header();
+    };
     
+    callback(get_http_info);
+}
+
+void tcp_connection::finish_server_initialization(event_queue* queue) {  
     try {
-        init_server(queue, request);
+        this->queue->delete_event(get_client_socket(), EVFILT_READ);
         
-        bool keep_alive = request.is_keep_alive();
+        init_server(queue);
         
-        server_write = [this, request, keep_alive](struct kevent& event) {
-            this->handle_server_write(event, request);
+        server_write = [this](struct kevent& event) {
+            this->handle_server_write(event);
         };
         
         queue->add_event(get_server_socket(), EVFILT_WRITE, &server_write);
-    } catch (std::exception e) {
-        std::cout << std::strerror(errno) << '\n';
+    } catch (std::exception const& e) {
+        //Seems that this catch don't invoked
+        std::cerr << std::strerror(errno) << '\n';
         std::cerr << "get neither POST nor GET request\n";
-        delete this;
+        this->server = nullptr;
     }
 }
 
 
 void tcp_connection::handle_client_read(struct kevent& event) {
-    if (event.flags & EV_EOF) {
+    if ((event.flags & EV_EOF) && (event.data == 0)) {
         std::cerr << "client read disconnected " << event.ident << '\n';
-        delete this;
+        safe_disconnect();
     } else {
-        receive_from_client(event);
+        get_http_request(event);
     }
 }
 
 void tcp_connection::handle_client_write(struct kevent& event, std::string response) {
     if ((event.flags & EV_EOF) && (event.data == 0)) {
         printf("client write disconnected\n");
-        client->disconnect();
+        safe_disconnect();
     } else {
-        std::cerr << "########################################\n";
-        std::cerr << response << "\n##########################################\n";
-        
         size_t sent = client->send(response);
         
         //check if client receive all data
+        //TODO resolver maybe
         if (sent < response.size()) {
             std::cerr << "CLIENT RECEIVED NOT ALL AVAILABLE DATA!!!\n";
             response = response.substr(sent);
@@ -124,60 +145,68 @@ void tcp_connection::handle_client_write(struct kevent& event, std::string respo
         } else {
             //dont have to listen client write
             queue->delete_event(get_client_socket(), EVFILT_WRITE);
+            
+            //Could read now again
+            this->buffer.clear_data();
+            queue->add_event(get_client_socket(), EVFILT_READ, &client_read);
         }
     }
 }
 
 
-void tcp_connection::handle_server_read(struct kevent& event, http_data response) {
+void tcp_connection::handle_server_read(struct kevent& event) {
     if ((event.flags & EV_EOF) && (event.data == 0)) {
         std::cerr << "server read disconnected " << event.ident << '\n';
-        if (response.is_keep_alive()) {
-            queue->delete_event(get_server_socket(), EVFILT_READ);
-        } else {
-            server->disconnect();
-        }
+//        queue->delete_event(get_server_socket(), EVFILT_READ);
+        safe_server_disconnect();
     } else {
-        std::string buffer = server->read(event.data);
+        //TODO read by chunks
+        std::string chunk = server->read(event.data);
         
-        response.append(buffer);
+        //For sure, that two threads can not write to request in one time
+        queue->delete_event(get_server_socket(), EVFILT_READ);
+        task append{
+            [this, chunk] {
+//                std::cerr << "#############################################\n" << chunk << "\n###################################\n";
+                this->buffer.append(chunk);
+                if (this->buffer.get_state() == http_data::State::COMPLETE) {
+                    //don't have to listen anymore
+                    this->queue->delete_event(get_server_socket(), EVFILT_READ);
+                    
+                    std::string to_sent = this->buffer.get_header() + this->buffer.get_body();
+                    this->buffer.clear_data();
+                    
+                    client_write = [this, to_sent](struct kevent& event) {
+                        this->handle_client_write(event, to_sent);
+                    };
+                    
+                    this->queue->add_event(this->get_client_socket(), EVFILT_WRITE, &this->client_write);
+                }
+                
+                //Now listening is available because append finished
+                this->queue->add_event(this->get_server_socket(), EVFILT_READ, &this->server_read);
+            }
+        };
         
-        if (response.get_state() != http_data::State::COMPLETE) {
-            server_read = [this, response](struct kevent& event) {
-                this->handle_server_read(event, response);
-            };
-        } else {
-            //don't have to listen anymore
-            queue->delete_event(get_server_socket(), EVFILT_READ);
-            
-            std::string to_sent = response.get_header() + response.get_body();
-            
-            client_write = [this, to_sent](struct kevent& event) {
-                this->handle_client_write(event, to_sent);
-            };
-            
-            queue->add_event(get_client_socket(), EVFILT_WRITE, &client_write);
-        }
+        callback(append);
     }
 }
 
 
-void tcp_connection::handle_server_write(struct kevent& event, http_data request) {
+void tcp_connection::handle_server_write(struct kevent& event) {
     if ((event.flags & EV_EOF) && (event.data == 0)) {
         printf("server write disconnected\n");
-        if (request.is_keep_alive()) {
-            queue->delete_event(get_server_socket(), EVFILT_WRITE);
-        } else {
-            server->disconnect();
-        }
+        safe_server_disconnect();
     } else {
-        server->send(request.get_header() + request.get_body());
+        server->send(this->buffer.get_header() + this->buffer.get_body());
         
         //Dont have to listen EVFILT_WRITE from server anymore
         queue->delete_event(get_server_socket(), EVFILT_WRITE);
         
+        buffer = http_data(std::string{}, http_data::Type::RESPONCE);
+        
         server_read = [this](struct kevent& event) {
-            this->handle_server_read(event, http_data{std::string(), http_data::Type::RESPONCE});
+            this->handle_server_read(event);
         };
         
         queue->add_event(get_server_socket(), EVFILT_READ, &server_read);
@@ -204,4 +233,8 @@ int tcp_connection::get_client_socket() {
 int tcp_connection::get_server_socket() {
     assert(server != nullptr);
     return server->get_socket();
+}
+
+void tcp_connection::set_callback(resolver _callback) {
+    this->callback = _callback;
 }

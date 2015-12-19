@@ -91,17 +91,6 @@ void http_data::parse_content_length() {
 }
 
 
-void http_data::parse_keep_alive() {
-    static const std::string keep_alive_mark{"Connection: keep-alive"};
-    
-    if (header.find(keep_alive_mark) != std::string::npos) {
-        keep_alive = true;
-    } else {
-        keep_alive = false;
-    }
-}
-
-
 void http_data::parse_is_chunked_encoding() {
     static const std::string chunked_encoding_mark{"Transfer-Encoding: chunked"};
     
@@ -162,8 +151,6 @@ void http_data::initialize_properties() {
         return;
     }
    
-    parse_keep_alive();
-    
     if (header.find("GET ") != std::string::npos) {
         type = Type::GET;
         transform_to_relative();

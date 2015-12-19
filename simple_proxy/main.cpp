@@ -7,17 +7,23 @@
 //
 
 #include <iostream>
+#include <thread>
+
 #include "ipv4_endpoint.hpp"
 #include "main_server.hpp"
 #include "ipv4_endpoint.hpp"
 #include "tcp_connection.hpp"
 #include "event_queue.hpp"
 #include "proxy.hpp"
+#include "listener.hpp"
 
 int main(int argc, const char * argv[]) {
-    main_server server = main_server(2538);
-    event_queue kq = event_queue(server.get_socket());
-    proxy proxy_server = proxy(&kq, server.get_socket());
+    main_server server(2539);
+    event_queue kq(server.get_socket());
+    proxy proxy_server{&kq, server.get_socket()};
+    
+    std::thread th1(listener::listen, &proxy_server);
+    std::thread th2(listener::listen, &proxy_server);
     
     proxy_server.main_loop();
 }
