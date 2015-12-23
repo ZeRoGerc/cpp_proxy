@@ -15,6 +15,7 @@
 #include <mutex>
 #include <functional>
 #include <condition_variable>
+#include <iostream>
 
 typedef std::function<void()> task;
 typedef std::function<void(task)> resolver;

@@ -40,27 +40,28 @@ private:
     resolver callback;
     
     http_data buffer;
-
+    
+    void get_http_request(struct kevent& event);
+    void init_server(event_queue* q);
+    void finish_server_initialization(event_queue* queue);
+    
+    
+    void handle_client_read(struct kevent& event);
+    void handle_client_write(struct kevent& event, std::string response);
+    void handle_server_read(struct kevent& event);
+    void handle_server_write(struct kevent& event);
 public:
     friend struct tcp_server;
     friend struct tcp_client;
     
     //Don't forget to set callback and client_handler after constructor
     tcp_connection(event_queue* queue, int descriptor);
-
-    void init_server(event_queue* q);
-
-    void finish_server_initialization(event_queue* queue);
     
     ~tcp_connection();
 
-    void set_client_handler(handler handler);
-    
     int get_client_socket();
 
     int get_server_socket();
-    
-    handler* get_client_handler();
     
     void set_callback(resolver callback);
     
@@ -69,16 +70,8 @@ public:
     void safe_client_disconnect();
     
     void safe_disconnect();
-    
-    void get_http_request(struct kevent& event);
 
-    void handle_client_read(struct kevent& event);
-    
-    void handle_client_write(struct kevent& event, std::string response);
-
-    void handle_server_read(struct kevent& event);
-
-    void handle_server_write(struct kevent& event);
+    void start();
 };
 
 #endif /* tcp_pair_hpp */

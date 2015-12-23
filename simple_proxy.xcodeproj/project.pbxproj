@@ -71,6 +71,43 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E6541B8F1C2AFE9600E8ECF3 /* sources */ = {
+			isa = PBXGroup;
+			children = (
+				E6D6CE931C1394A300355E3D /* event_queue.cpp */,
+				E6D6CE941C1394A300355E3D /* http_parse.cpp */,
+				E6D6CE951C1394A300355E3D /* ipv4_endpoint.cpp */,
+				E6D6CE961C1394A300355E3D /* main_server.cpp */,
+				E6D6CE971C1394A300355E3D /* proxy.cpp */,
+				E6D6CE981C1394A300355E3D /* tcp_client.cpp */,
+				E6D6CE991C1394A300355E3D /* tcp_server.cpp */,
+				E6FD6FA61C09E92600596585 /* main.cpp */,
+				E6AF23D41C13885000CBEC62 /* tcp_connection.cpp */,
+				E641451C1C23531900DE8094 /* http_data.cpp */,
+				E666244A1C2480C000A29409 /* tasks_pull.cpp */,
+				E6B668071C24A38800706014 /* listener.cpp */,
+			);
+			name = sources;
+			sourceTree = "<group>";
+		};
+		E6541B901C2AFEA500E8ECF3 /* headers */ = {
+			isa = PBXGroup;
+			children = (
+				E6FD6FB11C09E99C00596585 /* ipv4_endpoint.hpp */,
+				E6FD6FB41C09EA0B00596585 /* main_server.hpp */,
+				E6FD6FBD1C09F40000596585 /* tcp_connection.hpp */,
+				E6FD6FC01C09FAFC00596585 /* tcp_server.hpp */,
+				E6FD6FC31C09FB0E00596585 /* tcp_client.hpp */,
+				E6FD6FC91C0A04E100596585 /* event_queue.hpp */,
+				E6FD6FCE1C0A0A6F00596585 /* proxy.hpp */,
+				E6DE0C711C13350A00288191 /* http_parse.hpp */,
+				E641451D1C23531900DE8094 /* http_data.hpp */,
+				E666244B1C2480C000A29409 /* tasks_pull.hpp */,
+				E6B668081C24A38800706014 /* listener.hpp */,
+			);
+			name = headers;
+			sourceTree = "<group>";
+		};
 		E6FD6F9A1C09E92600596585 = {
 			isa = PBXGroup;
 			children = (
@@ -90,29 +127,8 @@
 		E6FD6FA51C09E92600596585 /* simple_proxy */ = {
 			isa = PBXGroup;
 			children = (
-				E6D6CE931C1394A300355E3D /* event_queue.cpp */,
-				E6D6CE941C1394A300355E3D /* http_parse.cpp */,
-				E6D6CE951C1394A300355E3D /* ipv4_endpoint.cpp */,
-				E6D6CE961C1394A300355E3D /* main_server.cpp */,
-				E6D6CE971C1394A300355E3D /* proxy.cpp */,
-				E6D6CE981C1394A300355E3D /* tcp_client.cpp */,
-				E6D6CE991C1394A300355E3D /* tcp_server.cpp */,
-				E6FD6FA61C09E92600596585 /* main.cpp */,
-				E6FD6FB11C09E99C00596585 /* ipv4_endpoint.hpp */,
-				E6FD6FB41C09EA0B00596585 /* main_server.hpp */,
-				E6FD6FBD1C09F40000596585 /* tcp_connection.hpp */,
-				E6FD6FC01C09FAFC00596585 /* tcp_server.hpp */,
-				E6FD6FC31C09FB0E00596585 /* tcp_client.hpp */,
-				E6FD6FC91C0A04E100596585 /* event_queue.hpp */,
-				E6FD6FCE1C0A0A6F00596585 /* proxy.hpp */,
-				E6DE0C711C13350A00288191 /* http_parse.hpp */,
-				E6AF23D41C13885000CBEC62 /* tcp_connection.cpp */,
-				E641451C1C23531900DE8094 /* http_data.cpp */,
-				E641451D1C23531900DE8094 /* http_data.hpp */,
-				E666244A1C2480C000A29409 /* tasks_pull.cpp */,
-				E666244B1C2480C000A29409 /* tasks_pull.hpp */,
-				E6B668071C24A38800706014 /* listener.cpp */,
-				E6B668081C24A38800706014 /* listener.hpp */,
+				E6541B901C2AFEA500E8ECF3 /* headers */,
+				E6541B8F1C2AFE9600E8ECF3 /* sources */,
 			);
 			path = simple_proxy;
 			sourceTree = "<group>";

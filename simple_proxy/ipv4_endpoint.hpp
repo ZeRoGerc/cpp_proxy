@@ -36,7 +36,6 @@ public:
     }
     
 private:
-    int descriptor;
     int client_socket;
 };
 

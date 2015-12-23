@@ -17,11 +17,7 @@ proxy::proxy(event_queue* queue, int descriptor) : queue(queue), descriptor(desc
         
         conn->set_callback(callback);
         
-        conn->set_client_handler([conn](struct kevent& event) {
-            conn->handle_client_read(event);
-        });
-        
-        this->queue->add_event(conn->get_client_socket(), EVFILT_READ, conn->get_client_handler());
+        conn->start();
     };
     
     queue->add_event(descriptor, EVFILT_READ, &connect_handler);

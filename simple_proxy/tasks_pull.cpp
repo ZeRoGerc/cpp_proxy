@@ -8,7 +8,6 @@
 
 #include "tasks_pull.hpp"
 
-
 void tasks_pull::push(task task) {
     std::unique_lock<std::mutex> lock(mutex);
     _pull.push(task);
@@ -17,7 +16,17 @@ void tasks_pull::push(task task) {
 }
 
 task tasks_pull::pop() {
+    std::unique_lock<std::mutex> lock(mutex);
+    
+    while (_pull.size() == 0) {
+        std::cerr << "LISTEN_WAIT\n";
+        condition.wait(lock);
+    }
+    
+    //We got one
     task result = _pull.front();
     _pull.pop();
+    
+    lock.unlock();
     return result;
 }
