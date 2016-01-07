@@ -1,0 +1,36 @@
+//
+// Created by Vladislav Sazanovich on 03.01.16.
+//
+
+#include "proxy_client.h"
+#include "http_parse.hpp"
+
+proxy_client::proxy_client(std::string host, size_t port)
+        : end_point(http_parse::get_ip_by_host(host, port), port), host(host) {}
+
+
+proxy_client::proxy_client(int descriptor)
+        : end_point(descriptor) {}
+
+size_t proxy_client::send(std::string const& request) {
+    if (request.size() == 0) return 0;  
+    ssize_t len = ::send(static_cast<int>(get_socket()), request.c_str(), request.size(), 0);
+
+    assert(len != -1);
+    return static_cast<size_t>(len);
+}
+
+std::string proxy_client::read(size_t len) {
+    char* buffer = new char[len];
+    ssize_t new_len = ::recv(static_cast<int>(get_socket()), buffer, len, 0);
+    if (new_len == -1) {
+        delete [] buffer;
+//        if (errno == 0x23) {
+        std::cout << errno << ' ' << std::strerror(errno) << std::endl;
+        throw std::exception();
+    }
+    
+    std::string result = std::string(buffer, static_cast<unsigned long long>(new_len));
+    delete [] buffer;
+    return result.substr(0, new_len);
+}

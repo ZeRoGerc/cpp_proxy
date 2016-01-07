@@ -11,6 +11,13 @@
 
 #include <stdio.h>
 #include <sstream>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <fcntl.h>
 
 struct http_parse {
 public:

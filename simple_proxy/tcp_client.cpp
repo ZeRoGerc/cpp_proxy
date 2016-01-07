@@ -5,7 +5,7 @@
 #include "tcp_connection.hpp"
 #include "tcp_client.hpp"
 
-tcp_client::tcp_client(tcp_connection* connection, int descriptor) : connection(connection), end_point(descriptor) {
+tcp_client::tcp_client(int descriptor) : end_point(descriptor) {
 }
 
 size_t tcp_client::send(std::string responce) {
@@ -27,9 +27,4 @@ std::string tcp_client::read(size_t len) {
     std::cerr << " $_$ " <<  len << " " << new_len <<  " " << result.size() << "\n";
     delete [] buffer;
     return result.substr(0, new_len);
-}
-
-void tcp_client::disconnect() {
-    connection->client = nullptr;
-    delete this;
 }

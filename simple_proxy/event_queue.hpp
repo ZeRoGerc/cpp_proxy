@@ -18,10 +18,10 @@
 #include <sys/types.h>
 #include <sys/event.h>
 #include <sys/time.h>
+#include <set>
+#include "tasks_poll.hpp"
 
 typedef std::function<void(struct kevent&)> handler;
-
-int get_id(struct kevent event);
 
 struct event_queue {
 public:
@@ -29,15 +29,15 @@ public:
     
     event_queue(int main_socket);
 
-    int delete_event(size_t ident, uint16_t filter);
+    void delete_event(size_t ident, int16_t filter);
 
-    void add_event(int sock, uint16_t filter, handler* hand);
-
-    void trigger_user_event(handler hand);
+    void add_event(size_t ident, int16_t filter, handler* hand);
     
-    void delete_trigger_event();
+    void execute_in_main(task t) {
+        main_thread_tasks.push_back(t);
+    }
     
-    int occured();
+    int occurred();
 
     void execute();
     
@@ -47,8 +47,16 @@ private:
     std::vector<bool> is_used = std::vector<bool>(SOMAXCONN);
     int kq;
     int main_socket;
+    int pipe_in;
+    int pipe_out;
+
+    std::mutex mutex;
+    std::set<size_t> deleted_events;
     
-    handler user_event_handler;
+    event_registration main_events_registrator;
+    std::vector<task> main_thread_tasks;
+
+    void event(size_t ident, int16_t filter, uint16_t flags, uint32_t fflags, int64_t data, handler* hand);
 };
 
 #endif /* event_queue_hpp */

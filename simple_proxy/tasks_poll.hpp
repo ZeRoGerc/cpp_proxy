@@ -1,5 +1,5 @@
 //
-//  tasks_pull.hpp
+//  tasks_poll.hpp
 //  simple_proxy
 //
 //  Created by Vladislav Sazanovich on 18.12.15.
@@ -20,14 +20,14 @@
 typedef std::function<void()> task;
 typedef std::function<void(task)> resolver;
 
-struct tasks_pull {
+struct tasks_poll {
 private:
     std::queue<task> _pull;
-public:
-    tasks_pull() {};
-    
     std::condition_variable condition;
     std::mutex mutex;
+public:
+    tasks_poll() {};
+    
     void push(task task);
     task pop();
     

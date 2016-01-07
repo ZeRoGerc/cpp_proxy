@@ -17,10 +17,15 @@
 
 struct main_server {
 public:
-    main_server() {};
-
     main_server(int port);
-
+    
+    main_server& operator=(main_server const&) = delete;
+    main_server(main_server const&) = delete;
+    
+    ~main_server() {
+        close(server_socket);
+    }
+    
     int get_socket() {
         return server_socket;
     }

@@ -18,7 +18,7 @@ public:
         while (true) {
             std::cerr << "LISTEN_ENTER\n";
             
-            task current_task = _proxy->_pull.pop();
+            task current_task = _proxy->poll.pop();
             
             std::cerr << "LISTEN_EXECUTE\n";
             current_task();

@@ -20,8 +20,9 @@
 
 struct ipv4_endpoint {
 public:
+    
     ipv4_endpoint(ipv4_endpoint const& other) = delete;
-    ipv4_endpoint operator=(ipv4_endpoint const& other) = delete;
+    ipv4_endpoint& operator=(ipv4_endpoint const& other) = delete;
 
     ipv4_endpoint(int descriptor);
     
@@ -31,7 +32,7 @@ public:
 
     void send(char* buffer);
     
-    int get_socket() {
+    size_t get_socket() const{
         return client_socket;
     }
     

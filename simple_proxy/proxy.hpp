@@ -10,20 +10,23 @@
 #define proxy_hpp
 
 #include <stdio.h>
+#include <utility>
 #include "event_queue.hpp"
 #include "tcp_connection.hpp"
+#include "event_registration.h"
 
 struct proxy {
 public:
     proxy(event_queue* queue, int descriptor);
     proxy(const proxy&) = delete;
     void main_loop();
-    
-    tasks_pull _pull;
+
+
+    tasks_poll poll;
 private:
-    handler connect_handler;
     event_queue* queue;
     int descriptor;
+    event_registration reg;
 };
 
 #endif /* proxy_hpp */

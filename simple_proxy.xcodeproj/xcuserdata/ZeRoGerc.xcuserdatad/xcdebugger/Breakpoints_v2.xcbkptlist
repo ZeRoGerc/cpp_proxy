@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/event_queue.hpp"
-            timestampString = "472228138.154997"
+            timestampString = "473885746.476576"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "73"
-            endingLineNumber = "73">
+            startingLineNumber = "82"
+            endingLineNumber = "82">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -38,11 +38,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/proxy.hpp"
-            timestampString = "471048303.993861"
+            timestampString = "472654346.966018"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "18"
-            endingLineNumber = "18">
+            startingLineNumber = "40"
+            endingLineNumber = "40">
             <Locations>
                <Location
                   shouldBeEnabled = "No"
@@ -84,11 +84,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/proxy.hpp"
-            timestampString = "471049814.551667"
+            timestampString = "472654346.966018"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "33"
-            endingLineNumber = "33">
+            startingLineNumber = "55"
+            endingLineNumber = "55">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -98,11 +98,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/proxy.hpp"
-            timestampString = "471049814.551667"
+            timestampString = "472654346.966018"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "35"
-            endingLineNumber = "35">
+            startingLineNumber = "57"
+            endingLineNumber = "57">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -112,11 +112,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/event_queue.hpp"
-            timestampString = "472228138.154997"
+            timestampString = "473885746.476576"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63">
+            startingLineNumber = "72"
+            endingLineNumber = "72">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -140,11 +140,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/proxy.hpp"
-            timestampString = "471049814.551667"
+            timestampString = "472654346.966018"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "37"
-            endingLineNumber = "37">
+            startingLineNumber = "59"
+            endingLineNumber = "59">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -154,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/event_queue.hpp"
-            timestampString = "472228138.154997"
+            timestampString = "473885746.476576"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "69"
-            endingLineNumber = "69">
+            startingLineNumber = "78"
+            endingLineNumber = "78">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -280,11 +280,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/event_queue.hpp"
-            timestampString = "472228138.154997"
+            timestampString = "473885746.476576"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "57"
-            endingLineNumber = "57">
+            startingLineNumber = "66"
+            endingLineNumber = "66">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -294,11 +294,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/event_queue.hpp"
-            timestampString = "472228138.154997"
+            timestampString = "473885746.476576"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "59"
-            endingLineNumber = "59">
+            startingLineNumber = "68"
+            endingLineNumber = "68">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -308,11 +308,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/event_queue.hpp"
-            timestampString = "472228138.154997"
+            timestampString = "473885746.476576"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "60"
-            endingLineNumber = "60">
+            startingLineNumber = "69"
+            endingLineNumber = "69">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -392,12 +392,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472591781.571607"
+            timestampString = "473880285.125648"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "207"
-            endingLineNumber = "207"
-            landmarkName = "tcp_connection::handle_server_write(struct kevent&amp; event)"
+            startingLineNumber = "240"
+            endingLineNumber = "240"
+            landmarkName = "tcp_connection::get_server_header(struct kevent &amp;event)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -422,12 +422,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472587711.363239"
+            timestampString = "473552614.277479"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "33"
-            endingLineNumber = "33"
-            landmarkName = "tcp_connection::init_server(event_queue* q)"
+            startingLineNumber = "42"
+            endingLineNumber = "42"
+            landmarkName = "tcp_connection::init_server()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -475,7 +475,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "9"
             endingLineNumber = "9"
-            landmarkName = "tcp_server::tcp_server(tcp_connection* connection, std::string host, size_t port)"
+            landmarkName = "tcp_server::tcp_server(std::string host, size_t port)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -486,12 +486,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472591781.571607"
+            timestampString = "473880285.125648"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "208"
-            endingLineNumber = "208"
-            landmarkName = "tcp_connection::handle_server_write(struct kevent&amp; event)"
+            startingLineNumber = "241"
+            endingLineNumber = "241"
+            landmarkName = "tcp_connection::get_server_header(struct kevent &amp;event)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -502,12 +502,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472591781.571607"
+            timestampString = "473880285.125648"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "157"
-            endingLineNumber = "157"
-            landmarkName = "tcp_connection::handle_server_read(struct kevent&amp; event)"
+            startingLineNumber = "190"
+            endingLineNumber = "190"
+            landmarkName = "tcp_connection::get_server_chunked_body(struct kevent &amp;event, std::string tail)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -596,54 +596,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472591781.571607"
+            timestampString = "473880285.125648"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "118"
-            endingLineNumber = "118">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472591781.571607"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "155"
-            endingLineNumber = "155">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472591781.571607"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "205"
-            endingLineNumber = "205">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472587711.363239"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "81"
-            endingLineNumber = "81"
-            landmarkName = "tcp_connection::get_http_request(struct kevent&amp; event)"
+            startingLineNumber = "147"
+            endingLineNumber = "147"
+            landmarkName = "tcp_connection::handle_client_write(struct kevent&amp; event)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -654,11 +612,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472591781.571607"
+            timestampString = "473880285.125648"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "155"
-            endingLineNumber = "155">
+            startingLineNumber = "188"
+            endingLineNumber = "188"
+            landmarkName = "tcp_connection::get_server_chunked_body(struct kevent &amp;event, std::string tail)"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -668,11 +628,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472591781.571607"
+            timestampString = "473880285.125648"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "127"
-            endingLineNumber = "127">
+            startingLineNumber = "238"
+            endingLineNumber = "238"
+            landmarkName = "tcp_connection::get_server_header(struct kevent &amp;event)"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -682,12 +644,60 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472591781.571607"
+            timestampString = "473877109.709032"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "122"
-            endingLineNumber = "122"
-            landmarkName = "tcp_connection::handle_client_read(struct kevent&amp; event)"
+            startingLineNumber = "102"
+            endingLineNumber = "102"
+            landmarkName = "tcp_connection::get_client_header(struct kevent &amp;event)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/tcp_connection.cpp"
+            timestampString = "473880285.125648"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "188"
+            endingLineNumber = "188"
+            landmarkName = "tcp_connection::get_server_chunked_body(struct kevent &amp;event, std::string tail)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/tcp_connection.cpp"
+            timestampString = "473880285.125648"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "156"
+            endingLineNumber = "156"
+            landmarkName = "tcp_connection::handle_client_write(struct kevent&amp; event)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/tcp_connection.cpp"
+            timestampString = "473880285.125648"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "151"
+            endingLineNumber = "151"
+            landmarkName = "tcp_connection::handle_client_write(struct kevent&amp; event)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -726,7 +736,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/http_data.cpp"
@@ -746,12 +756,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472587711.363239"
+            timestampString = "473552614.277479"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "32"
-            endingLineNumber = "32"
-            landmarkName = "tcp_connection::init_server(event_queue* q)"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
+            landmarkName = "tcp_connection::init_server()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -762,12 +772,26 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472591781.571607"
+            timestampString = "473880285.125648"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "128"
-            endingLineNumber = "128"
-            landmarkName = "tcp_connection::handle_client_write(struct kevent&amp; event, std::string response)"
+            startingLineNumber = "157"
+            endingLineNumber = "157">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/tcp_connection.cpp"
+            timestampString = "473880285.125648"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "239"
+            endingLineNumber = "239"
+            landmarkName = "tcp_connection::get_server_header(struct kevent &amp;event)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -778,28 +802,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472591781.571607"
+            timestampString = "473880285.125648"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "206"
-            endingLineNumber = "206"
-            landmarkName = "tcp_connection::handle_server_write(struct kevent&amp; event)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472591781.571607"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "119"
-            endingLineNumber = "119"
-            landmarkName = "tcp_connection::handle_client_read(struct kevent&amp; event)"
+            startingLineNumber = "148"
+            endingLineNumber = "148"
+            landmarkName = "tcp_connection::handle_client_write(struct kevent&amp; event)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -874,12 +882,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/event_queue.cpp"
-            timestampString = "472228138.154997"
+            timestampString = "473885746.476576"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "84"
-            endingLineNumber = "84"
-            landmarkName = "event_queue::execute()"
+            startingLineNumber = "97"
+            endingLineNumber = "97"
+            landmarkName = "event_queue::event(size_t ident, int16_t filter, uint16_t flags, uint32_t fflags, int64_t data, handler* hand)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -906,28 +914,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/event_queue.cpp"
-            timestampString = "472228138.154997"
+            timestampString = "473885746.476576"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "88"
-            endingLineNumber = "88"
-            landmarkName = "event_queue::execute()"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "simple_proxy/proxy.cpp"
-            timestampString = "472171985.262794"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "11"
-            endingLineNumber = "11"
-            landmarkName = "proxy::proxy(event_queue* queue, int descriptor)"
+            startingLineNumber = "101"
+            endingLineNumber = "101"
+            landmarkName = "event_queue::event(size_t ident, int16_t filter, uint16_t flags, uint32_t fflags, int64_t data, handler* hand)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -938,12 +930,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/event_queue.cpp"
-            timestampString = "472225901.519536"
+            timestampString = "473885746.476576"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "30"
-            endingLineNumber = "30"
-            landmarkName = "event_queue::add_event(int sock, uint16_t filter, handler* hand)"
+            startingLineNumber = "42"
+            endingLineNumber = "42"
+            landmarkName = "event_queue::execute()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -970,12 +962,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/event_queue.cpp"
-            timestampString = "472225901.519536"
+            timestampString = "473885746.476576"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "21"
-            endingLineNumber = "21"
-            landmarkName = "event_queue::delete_event(size_t ident, uint16_t filter)"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
+            landmarkName = "event_queue::add_event(size_t ident, int16_t filter, handler* hand)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -986,12 +978,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/event_queue.cpp"
-            timestampString = "472225901.519536"
+            timestampString = "473885746.476576"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "22"
-            endingLineNumber = "22"
-            landmarkName = "event_queue::delete_event(size_t ident, uint16_t filter)"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
+            landmarkName = "event_queue::add_event(size_t ident, int16_t filter, handler* hand)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1015,13 +1007,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "simple_proxy/tasks_pull.cpp"
+            filePath = "simple_proxy/tasks_poll.cpp"
             timestampString = "472586168.903029"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "12"
             endingLineNumber = "12"
-            landmarkName = "tasks_pull::push(task task)"
+            landmarkName = "tasks_poll::push(task task)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1032,12 +1024,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/event_queue.cpp"
-            timestampString = "472225901.519536"
+            timestampString = "473885746.476576"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "29"
-            endingLineNumber = "29"
-            landmarkName = "event_queue::add_event(int sock, uint16_t filter, handler* hand)"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
+            landmarkName = "event_queue::execute()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1048,12 +1040,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472591781.571607"
+            timestampString = "473880285.125648"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "103"
-            endingLineNumber = "103"
-            landmarkName = "tcp_connection::finish_server_initialization(event_queue* queue)"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
+            landmarkName = "tcp_connection::get_client_header(struct kevent &amp;event)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1096,12 +1088,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472587711.363239"
+            timestampString = "473880285.125648"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "88"
-            endingLineNumber = "88"
-            landmarkName = "tcp_connection::get_http_request(struct kevent&amp; event)"
+            startingLineNumber = "111"
+            endingLineNumber = "111"
+            landmarkName = "tcp_connection::get_client_header(struct kevent &amp;event)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1112,12 +1104,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472591781.571607"
+            timestampString = "473880285.125648"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "120"
-            endingLineNumber = "120"
-            landmarkName = "tcp_connection::handle_client_read(struct kevent&amp; event)"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
+            landmarkName = "tcp_connection::handle_client_write(struct kevent&amp; event)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1128,12 +1120,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472591781.571607"
+            timestampString = "473880285.125648"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "129"
-            endingLineNumber = "129"
-            landmarkName = "tcp_connection::handle_client_write(struct kevent&amp; event, std::string response)"
+            startingLineNumber = "158"
+            endingLineNumber = "158"
+            landmarkName = "tcp_connection::get_server_content_body(struct kevent &amp;event, size_t residue)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1144,12 +1136,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472591781.571607"
+            timestampString = "473880285.125648"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "102"
-            endingLineNumber = "102"
-            landmarkName = "tcp_connection::finish_server_initialization(event_queue* queue)"
+            startingLineNumber = "131"
+            endingLineNumber = "131"
+            landmarkName = "tcp_connection::get_client_header(struct kevent &amp;event)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1160,12 +1152,370 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "simple_proxy/tcp_connection.cpp"
-            timestampString = "472591781.571607"
+            timestampString = "473880285.125648"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "161"
-            endingLineNumber = "161"
-            landmarkName = "tcp_connection::handle_server_read(struct kevent&amp; event)"
+            startingLineNumber = "194"
+            endingLineNumber = "194"
+            landmarkName = "tcp_connection::get_server_chunked_body(struct kevent &amp;event, std::string tail)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/proxy.cpp"
+            timestampString = "473546667.335477"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
+            landmarkName = "proxy::main_loop()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/proxy.cpp"
+            timestampString = "473546692.661461"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "13"
+            endingLineNumber = "13"
+            landmarkName = "proxy::proxy(event_queue* queue, int descriptor)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/tcp_connection.cpp"
+            timestampString = "473880285.125648"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "204"
+            endingLineNumber = "204"
+            landmarkName = "tcp_connection::get_server_header(struct kevent &amp;event)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/tcp_connection.cpp"
+            timestampString = "473877109.709032"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "96"
+            endingLineNumber = "96"
+            landmarkName = "tcp_connection::get_client_header(struct kevent &amp;event)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/proxy.cpp"
+            timestampString = "473546878.082872"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "20"
+            endingLineNumber = "20"
+            landmarkName = "proxy::proxy(event_queue* queue, int descriptor)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/event_registration.cpp"
+            timestampString = "473547304.292776"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "12"
+            endingLineNumber = "12"
+            landmarkName = "event_registration::event_registration(event_queue* queue, size_t ident, int16_t filter, handler h, bool listen)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/event_registration.h"
+            timestampString = "473880285.125648"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "40"
+            endingLineNumber = "40">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/event_registration.h"
+            timestampString = "473548951.206021"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "27"
+            endingLineNumber = "27">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/event_registration.h"
+            timestampString = "473549179.83839"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "29"
+            endingLineNumber = "29">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/event_registration.h"
+            timestampString = "473548951.206021"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "21"
+            endingLineNumber = "21">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/event_registration.h"
+            timestampString = "473880285.125648"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "41"
+            endingLineNumber = "41">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/tcp_connection.cpp"
+            timestampString = "473880285.125648"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "110"
+            endingLineNumber = "110"
+            landmarkName = "tcp_connection::get_client_header(struct kevent &amp;event)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/tcp_connection.cpp"
+            timestampString = "473877109.709032"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "81"
+            endingLineNumber = "81"
+            landmarkName = "tcp_connection::get_client_body(struct kevent &amp;event, size_t residue)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/tcp_connection.cpp"
+            timestampString = "473880285.125648"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "246"
+            endingLineNumber = "246"
+            landmarkName = "tcp_connection::handle_server_write(struct kevent&amp; event)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/tcp_connection.cpp"
+            timestampString = "473880285.125648"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "201"
+            endingLineNumber = "201"
+            landmarkName = "tcp_connection::get_server_header(struct kevent &amp;event)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/tcp_connection.cpp"
+            timestampString = "473880285.125648"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "174"
+            endingLineNumber = "174"
+            landmarkName = "tcp_connection::get_server_chunked_body(struct kevent &amp;event, std::string tail)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/tcp_connection.cpp"
+            timestampString = "473880285.125648"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "159"
+            endingLineNumber = "159"
+            landmarkName = "tcp_connection::get_server_content_body(struct kevent &amp;event, size_t residue)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/tcp_connection.cpp"
+            timestampString = "473880285.125648"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "146"
+            endingLineNumber = "146"
+            landmarkName = "tcp_connection::handle_client_write(struct kevent&amp; event)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/tcp_connection.cpp"
+            timestampString = "473872280.678414"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "20"
+            endingLineNumber = "20"
+            landmarkName = "tcp_connection::start()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/tcp_connection.cpp"
+            timestampString = "473880285.125648"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "292"
+            endingLineNumber = "292"
+            landmarkName = "tcp_connection::switch_state(State new_state)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/tcp_connection.cpp"
+            timestampString = "473880285.125648"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "106"
+            endingLineNumber = "106"
+            landmarkName = "tcp_connection::get_client_header(struct kevent &amp;event)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/tcp_connection.cpp"
+            timestampString = "473880285.125648"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "295"
+            endingLineNumber = "295"
+            landmarkName = "tcp_connection::switch_state(State new_state)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "simple_proxy/event_queue.cpp"
+            timestampString = "473885740.558492"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "10"
+            endingLineNumber = "10"
+            landmarkName = "event_queue::event_queue(int main_socket)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
