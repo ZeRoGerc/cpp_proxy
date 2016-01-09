@@ -26,7 +26,7 @@ ipv4_endpoint::ipv4_endpoint(int descriptor) {
     }
 }
 
-ipv4_endpoint::ipv4_endpoint(std::string ip, size_t port) {
+ipv4_endpoint::ipv4_endpoint(std::string const& ip, size_t port) {
     client_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (client_socket == -1) {
         throw new std::exception();

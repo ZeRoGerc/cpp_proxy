@@ -15,6 +15,8 @@
 #include "tcp_connection.hpp"
 #include "event_registration.h"
 
+struct tcp_connection;
+
 struct proxy {
 public:
     proxy(event_queue* queue, int descriptor);
@@ -27,6 +29,8 @@ private:
     event_queue* queue;
     int descriptor;
     event_registration reg;
+    
+    std::set<tcp_connection*> deleted;
 };
 
 #endif /* proxy_hpp */

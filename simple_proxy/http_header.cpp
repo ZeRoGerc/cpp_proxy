@@ -55,6 +55,14 @@ void http_header::parse_content_length() {
     }
 }
 
+bool http_header::is_valid() const {
+    if (data.substr(0, 3) == "GET")
+        return true;
+    if (data.substr(0, 4) == "POST")
+        return true;
+    return false;
+}
+
 void http_header::parse_is_chunked_encoding() {
     static const std::string chunked_encoding_mark{"Transfer-Encoding: chunked"};
     
@@ -103,6 +111,7 @@ size_t http_header::retrieve_port() const {
     while (isdigit(data[pos])) {
         port *= 10;
         port += (data[pos] - '0');
+        pos++;
     }
     
     return port;

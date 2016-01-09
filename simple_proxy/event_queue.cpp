@@ -3,6 +3,7 @@
 //
 
 #include <sys/socket.h>
+#include <assert.h>
 #include "event_queue.hpp"
 
 event_queue::event_queue(int main_socket) : main_socket(main_socket) {
@@ -13,46 +14,56 @@ event_queue::event_queue(int main_socket) : main_socket(main_socket) {
     }
     pipe_in = fds[1];
     pipe_out = fds[0];
+    
+    main_thread_events_handler = handler {
+        [this](struct kevent& event) {
+            assert(main_thread_tasks.size() != 0);
+            char* buffer = new char(1);
+            read(pipe_out, buffer, 1);
+            delete [] buffer;
+            main_thread_tasks.back()();
+            main_thread_tasks.pop_back();
+        }
+    };
+    
+    add_event(pipe_out, EVFILT_READ, &main_thread_events_handler);
 }
 
 void event_queue::delete_event(size_t ident, int16_t filter) {
-    std::lock_guard<std::mutex> locker{mutex};
-
-    if (deleted_events.find(ident) == deleted_events.end()) {
+    if (deleted_events.find(std::make_pair(ident, filter)) == deleted_events.end()) {
         event(ident, filter, EV_DELETE, NULL, NULL, nullptr);
-        deleted_events.insert(ident);
+        deleted_events.insert(std::make_pair(ident, filter));
+    } else {
+        std::cout << "already deleted" << std::endl;
     }
 }
 
 void event_queue::add_event(size_t ident, int16_t filter, handler* hand) {
-    std::lock_guard<std::mutex> locker{mutex};
     event(ident, filter, EV_ADD, NULL, NULL, hand);
 }
 
-int event_queue::occurred() {
+void event_queue::execute_in_main(task t) {
     std::lock_guard<std::mutex> locker{mutex};
+    main_thread_tasks.push_back(t);
+    write(pipe_in, "T", 1);
+}
 
-    deleted_events.clear();
+int event_queue::occurred() {
     return kevent(kq, NULL, 0, evlist, SOMAXCONN, NULL);
 }
 
 void event_queue::execute() {
     int amount = kevent(kq, NULL, 0, evlist, SOMAXCONN, NULL);
-
+    deleted_events.clear();
+    
 //    std::cerr << "AMOUNT " << amount << "\n";
 
-    std::unique_lock<std::mutex> locker{mutex, std::defer_lock};
-    
     for (int i = 0; i < amount; i++) {
-//        std::cerr << "EVENT " << evlist[i].filter << "\n";
-
-        locker.lock();
-        if (deleted_events.find(evlist[i].ident) == deleted_events.end()) {
-            locker.unlock();
+        std::cerr << "EVENT " << evlist[i].filter << ' ' << evlist[i].ident << "\n";
+        
+        if (deleted_events.size() == 0 || deleted_events.find(std::make_pair(evlist[i].ident, evlist[i].filter)) == deleted_events.end()) {
             handler *hand = static_cast<handler *>(evlist[i].udata);
             hand->operator()(evlist[i]);
-        } else {
-            locker.unlock();
         }
     }
 }

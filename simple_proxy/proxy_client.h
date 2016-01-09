@@ -13,7 +13,7 @@
 
 struct proxy_client {
 public:
-    proxy_client(std::string host, size_t port = 80);
+    proxy_client(std::string const& ip, std::string const& host = "localhost", size_t port = 80);
 
     proxy_client(int descriptor);
 
@@ -34,10 +34,12 @@ public:
 
     void set_read_event(event_registration&& event) {
         event_read = std::move(event);
+        resume_read();
     }
 
     void set_write_event(event_registration&& event) {
         event_write = std::move(event);
+        resume_write();
     }
 
     void stop_read() {

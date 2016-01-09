@@ -5,8 +5,8 @@
 #include "proxy_client.h"
 #include "http_parse.hpp"
 
-proxy_client::proxy_client(std::string host, size_t port)
-        : end_point(http_parse::get_ip_by_host(host, port), port), host(host) {}
+proxy_client::proxy_client(std::string const& ip, std::string const& host, size_t port)
+        : end_point(ip, port), host(host) {}
 
 
 proxy_client::proxy_client(int descriptor)
@@ -16,7 +16,7 @@ size_t proxy_client::send(std::string const& request) {
     if (request.size() == 0) return 0;  
     ssize_t len = ::send(static_cast<int>(get_socket()), request.c_str(), request.size(), 0);
 
-    assert(len != -1);
+    if (len == -1) len = 0;
     return static_cast<size_t>(len);
 }
 

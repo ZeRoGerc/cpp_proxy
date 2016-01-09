@@ -33,9 +33,7 @@ public:
 
     void add_event(size_t ident, int16_t filter, handler* hand);
     
-    void execute_in_main(task t) {
-        main_thread_tasks.push_back(t);
-    }
+    void execute_in_main(task t);
     
     int occurred();
 
@@ -51,9 +49,9 @@ private:
     int pipe_out;
 
     std::mutex mutex;
-    std::set<size_t> deleted_events;
+    std::set< std::pair<size_t, int16_t> > deleted_events;
     
-    event_registration main_events_registrator;
+    handler main_thread_events_handler;
     std::vector<task> main_thread_tasks;
 
     void event(size_t ident, int16_t filter, uint16_t flags, uint32_t fflags, int64_t data, handler* hand);

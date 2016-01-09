@@ -58,6 +58,8 @@ struct http_header {
     inline std::string get_string_representation() const {
         return data;
     }
+    
+    bool is_valid() const;
 
     void init_properties();
     

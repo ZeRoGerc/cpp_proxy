@@ -21,7 +21,7 @@
 
 struct http_parse {
 public:
-    std::string static get_ip_by_host(std::string const& host, size_t port) {
+    std::string static get_ip_by_host(std::string const& host, size_t port=80) {
         struct addrinfo hints, *res, *res0;
         int error;
         int s;

@@ -26,7 +26,7 @@ public:
 
     ipv4_endpoint(int descriptor);
     
-    ipv4_endpoint(std::string ip, size_t port);
+    ipv4_endpoint(std::string const& ip, size_t port);
 
     ~ipv4_endpoint();
 
