@@ -2,15 +2,15 @@
 // Created by Vladislav Sazanovich on 06.12.15.
 //
 
-#include "ipv4_endpoint.hpp"
+#include "socket.hpp"
 
 #include <iostream>
 #include <sys/socket.h>
 
-ipv4_endpoint::ipv4_endpoint(int descriptor) {
+socket::socket(int descriptor) {
     sockaddr client_addr;
     socklen_t client_size = sizeof(sockaddr);
-    client_socket = accept(descriptor, (sockaddr*) &client_addr, &client_size);
+    client_socket = accept(descriptor, &client_addr, &client_size);
 
     if (client_socket == -1) {
         throw new std::exception();
@@ -26,8 +26,8 @@ ipv4_endpoint::ipv4_endpoint(int descriptor) {
     }
 }
 
-ipv4_endpoint::ipv4_endpoint(std::string const& ip, size_t port) {
-    client_socket = socket(AF_INET, SOCK_STREAM, 0);
+socket::socket(std::string const& ip, size_t port) {
+    client_socket = ::socket(AF_INET, SOCK_STREAM, 0);
     if (client_socket == -1) {
         throw new std::exception();
     }
@@ -51,10 +51,6 @@ ipv4_endpoint::ipv4_endpoint(std::string const& ip, size_t port) {
     connect(client_socket, (struct sockaddr*)&serv, sizeof(serv));
 }
 
-ipv4_endpoint::~ipv4_endpoint() {
+socket::~socket() {
     close(client_socket);
-}
-
-void ipv4_endpoint::send(char* buffer) {
-    ::send(get_socket(), buffer, strlen(buffer), 0); // Only in debug
 }

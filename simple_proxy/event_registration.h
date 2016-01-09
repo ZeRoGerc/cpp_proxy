@@ -11,7 +11,7 @@ struct event_registration
 {
     event_registration();
 
-    event_registration(event_queue* queue, size_t ident, int16_t filter, handler h, bool listen=false);
+    event_registration(event_queue* queue, int ident, int16_t filter, handler h, bool listen=false);
 
     event_registration(event_registration const&) = delete;
     event_registration& operator=(event_registration const&) = delete;
@@ -25,14 +25,14 @@ struct event_registration
 
     void stop_listen() {
         if (is_listened && ident != -1) {
-            queue->delete_event(ident, filter);
+            queue->delete_event(static_cast<size_t>(ident), filter);
             is_listened = false;
         }
     }
 
     void resume_listen() {
         if (!is_listened && ident != -1) {
-            queue->add_event(ident, filter, &handler_);
+            queue->add_event(static_cast<size_t>(ident), filter, &handler_);
             is_listened = true;
         }
     }
@@ -40,7 +40,7 @@ struct event_registration
     void change_function(handler hand) {
         handler_ = std::move(hand);
         if (is_listened)
-            queue->add_event(ident, filter, &handler_);
+            queue->add_event(static_cast<size_t>(ident), filter, &handler_);
     }
     
     bool is_valid() const {
@@ -50,10 +50,10 @@ struct event_registration
 private:
     event_queue* queue;
     handler handler_;
-    size_t ident = -1;
+    int ident = -1;
     int16_t filter;
 
-    bool is_listened=false;
+    bool is_listened = false;
 };
 
 

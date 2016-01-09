@@ -51,7 +51,7 @@ struct http_header {
         return state;
     }
 
-    inline int get_content_length() const {
+    inline size_t get_content_length() const {
         return content_length;
     }
 

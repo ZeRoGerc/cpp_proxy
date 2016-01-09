@@ -6,8 +6,8 @@
 //  Copyright © 2015 ZeRoGerc. All rights reserved.
 //
 
-#ifndef ipv4_endpoint_hpp
-#define ipv4_endpoint_hpp
+#ifndef socket_hpp
+#define socket_hpp
 
 #include <stdio.h>
 #include <sys/socket.h>
@@ -18,21 +18,19 @@
 #include <cmath>
 #include <string>
 
-struct ipv4_endpoint {
+struct socket {
 public:
     
-    ipv4_endpoint(ipv4_endpoint const& other) = delete;
-    ipv4_endpoint& operator=(ipv4_endpoint const& other) = delete;
+    socket(socket const& other) = delete;
+    socket & operator=(socket const& other) = delete;
 
-    ipv4_endpoint(int descriptor);
+    socket(int descriptor);
     
-    ipv4_endpoint(std::string const& ip, size_t port);
+    socket(std::string const& ip, size_t port);
 
-    ~ipv4_endpoint();
-
-    void send(char* buffer);
+    ~socket();
     
-    size_t get_socket() const{
+    int value() const {
         return client_socket;
     }
     

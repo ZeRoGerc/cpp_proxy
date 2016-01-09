@@ -23,7 +23,7 @@ task tasks_poll::pop() {
         condition.wait(lock);
     }
     
-    //We got one
+    //We've got one
     task result = _pull.front();
     _pull.pop();
     

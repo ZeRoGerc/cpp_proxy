@@ -19,7 +19,6 @@
 
 #include "event_queue.hpp"
 #include "http_parse.hpp"
-#include "http_data.hpp"
 #include "tasks_poll.hpp"
 #include "http_header.hpp"
 #include "proxy.hpp"
@@ -52,7 +51,7 @@ public:
     
     void append(std::string chunk);
     
-    std::string get(size_t amount=-1) const;
+    std::string get(size_t amount = -1) const;
     
     void pop_front(size_t amount);
     
@@ -64,8 +63,8 @@ public:
 
 struct tcp_connection {
 private:
-    static const size_t CHUNK_SIZE = 1024;
-    static const size_t BUFFER_SIZE = 16384;
+    static const int CHUNK_SIZE;
+    static const int BUFFER_SIZE;
 
     enum class State {UNDEFINED, RECEIVE_CLIENT, RESOLVE, SEND_SERVER, RECEIVE_SERVER, SEND_CLIENT, DELETED};
 
@@ -124,12 +123,12 @@ public:
     
     ~tcp_connection();
 
-    size_t get_client_socket() {
+    int get_client_socket() {
         assert(client);
         return client->get_socket();
     }
 
-    size_t get_server_socket() {
+    int get_server_socket() {
         assert(server);
         return server->get_socket();
     }

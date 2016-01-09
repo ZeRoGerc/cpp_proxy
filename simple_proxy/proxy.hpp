@@ -20,16 +20,27 @@ struct tcp_connection;
 struct proxy {
 public:
     proxy(event_queue* queue, int descriptor);
-    proxy(const proxy&) = delete;
+
+    proxy(proxy const&) = delete;
+    proxy& operator=(proxy const&) = delete;
+
     void main_loop();
 
+    inline void add_background_task(task t) {
+        poll.push(t);
+    }
 
-    tasks_poll poll;
+    inline task get_background_task() {
+        return poll.pop();
+    }
+
 private:
     event_queue* queue;
     int descriptor;
+
     event_registration reg;
-    
+
+    tasks_poll poll;
     std::set<tcp_connection*> deleted;
 };
 

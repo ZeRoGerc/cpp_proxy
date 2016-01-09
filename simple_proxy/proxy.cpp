@@ -18,11 +18,11 @@ proxy::proxy(event_queue* queue, int descriptor)
     
               resolver callback = [this](task t) {
                   std::cerr << "PUSH\n";
-                  this->poll.push(t);
+                  add_background_task(t);
               };
               
               std::function<void()> deleter = [this, conn]() {
-                  this->deleted.insert(conn);
+                  deleted.insert(conn);
               };
     
               conn->set_callback(callback);
@@ -31,19 +31,7 @@ proxy::proxy(event_queue* queue, int descriptor)
           },
           true
           )
-{
-//    reg.stop_listen();
-//    reg.change_function(
-//                        [this](struct kevent& event) {
-//                            std::cerr << "Hi";
-//                        }
-//                        );
-//    
-//    reg.stop_listen();
-//    reg.stop_listen();
-//    reg.stop_listen();
-//    reg.resume_listen();
-}
+{}
 
 void proxy::main_loop() {
     while (true) {

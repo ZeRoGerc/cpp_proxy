@@ -8,7 +8,7 @@
 
 #include <iosfwd>
 #include <assert.h>
-#include "ipv4_endpoint.hpp"
+#include "socket.hpp"
 #include "event_registration.h"
 
 struct proxy_client {
@@ -20,8 +20,8 @@ public:
     proxy_client(proxy_client const&) = delete;
     proxy_client& operator=(proxy_client const&) = delete;
 
-    size_t get_socket() const {
-        return end_point.get_socket();
+    int get_socket() const {
+        return client_socket.value();
     }
 
     size_t send(std::string const& request);
@@ -77,7 +77,7 @@ public:
     }
 
 private:
-    ipv4_endpoint end_point;
+    struct socket client_socket;
     std::string host = "localhost";
 
     event_registration event_read;

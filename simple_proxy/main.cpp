@@ -10,9 +10,9 @@
 #include <thread>
 #include <signal.h>
 
-#include "ipv4_endpoint.hpp"
+#include "socket.hpp"
 #include "main_server.hpp"
-#include "ipv4_endpoint.hpp"
+#include "socket.hpp"
 #include "tcp_connection.hpp"
 #include "event_queue.hpp"
 #include "proxy.hpp"

@@ -6,11 +6,11 @@
 
 event_registration::event_registration() {};
 
-event_registration::event_registration(event_queue* queue, size_t ident, int16_t filter, handler h, bool listen)
+event_registration::event_registration(event_queue* queue, int ident, int16_t filter, handler h, bool listen)
         : queue(queue), ident(ident), filter(filter), handler_(std::move(h)), is_listened(listen)
 {
     if (is_listened) {
-        queue->add_event(ident, filter, &handler_);
+        queue->add_event(static_cast<size_t>(ident), filter, &handler_);
     }
 }
 
@@ -27,7 +27,7 @@ event_registration::event_registration(event_registration&& other)
     other.is_listened = false;
     
     if (previous) {
-        queue->add_event(ident, filter, &handler_);
+        queue->add_event(static_cast<size_t>(ident), filter, &handler_);
     }
 }
 
@@ -45,7 +45,7 @@ event_registration& event_registration::operator=(event_registration&& other)
     is_listened = other.is_listened;
     
     if (previous) {
-        queue->add_event(ident, filter, &handler_);
+        queue->add_event(static_cast<size_t>(ident), filter, &handler_);
     }
     
     return *this;

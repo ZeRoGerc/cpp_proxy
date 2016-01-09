@@ -7,12 +7,12 @@
 //
 
 #include <stdio.h>
-#include "ipv4_endpoint.hpp"
+#include "socket.hpp"
 #include "tcp_connection.hpp"
-#include "tcp_client.hpp"
-#include "tcp_server.hpp"
 
 const std::string buffer::chunked_end{"\r\n0\r\n\r\n"};
+const int tcp_connection::CHUNK_SIZE = 1024;
+const int tcp_connection::BUFFER_SIZE = 16384;
 
 buffer::buffer(std::string chunk, int amount_of_data) {
     available_data = amount_of_data;
@@ -25,7 +25,7 @@ void buffer::append(std::string chunk) {
     assert(available_data != 0);
     
     if (available_data != -1 && chunk.size() > available_data) {
-        chunk = chunk.substr(0, available_data);
+        chunk = chunk.substr(0, static_cast<unsigned>(available_data));
     }
     
     if (chunk.size() > chunked_end.size()) {
@@ -48,12 +48,8 @@ void buffer::append(std::string chunk) {
 }
 
 std::string buffer::get(size_t amount) const {
-    if (amount == -1) { //return all data by default
-        return data;
-    }
-    
-    if (amount >= data.size()) {
-        std::string ret = data;
+    //amount == -1: return all data by default
+    if (amount == -1 || amount >= data.size()) {
         return data;
     }
     
@@ -136,7 +132,7 @@ void tcp_connection::get_client_body(struct kevent &event) {
     if (handle_client_disconnect(event) || body_buffer.amount_of_available_data() == 0)
         return;
 
-    std::string chunk = client->read(std::min(1024, static_cast<int>(body_buffer.amount_of_available_data())));
+    std::string chunk = client->read(std::min(CHUNK_SIZE, body_buffer.amount_of_available_data()));
     body_buffer.append(chunk);
 }
 
@@ -146,7 +142,7 @@ void tcp_connection::get_client_header(struct kevent &event) {
         return;
     }
 
-    std::string chunk = client->read(1024);
+    std::string chunk = client->read(CHUNK_SIZE);
 
     std::cerr << "client " << chunk << "\n###################################\n";
     header.append(chunk);
@@ -221,7 +217,7 @@ void tcp_connection::get_server_body(struct kevent &event) {
     if (handle_server_disconnect(event) || body_buffer.amount_of_available_data() == 0)
         return;
 
-    std::string chunk = server->read(1024);
+    std::string chunk = server->read(CHUNK_SIZE);
     body_buffer.append(chunk);
 }
 
@@ -229,7 +225,7 @@ void tcp_connection::get_server_header(struct kevent &event) {
     if (handle_server_disconnect(event))
         return;
 
-    std::string chunk = server->read(1024);
+    std::string chunk = server->read(CHUNK_SIZE);
 
     std::cerr << "server " << chunk << "\n###################################\n";
     header.append(chunk);
