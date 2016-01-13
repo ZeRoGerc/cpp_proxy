@@ -1,6 +1,9 @@
 # Xcode
 *.xcodeproj
 
+# Idea
+*.idea
+
 # Compiled Object files
 *.slo
 *.lo

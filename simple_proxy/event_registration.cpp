@@ -3,6 +3,7 @@
 //
 
 #include "event_registration.h"
+#include <assert.h>
 
 event_registration::event_registration() {};
 
@@ -10,42 +11,46 @@ event_registration::event_registration(event_queue* queue, int ident, int16_t fi
         : queue(queue), ident(ident), filter(filter), handler_(std::move(h)), is_listened(listen)
 {
     if (is_listened) {
-        queue->add_event(static_cast<size_t>(ident), filter, &handler_);
+        queue->add_event(static_cast<size_t>(ident), filter, handler_);
     }
 }
 
 event_registration::event_registration(event_registration&& other)
 {
-    bool previous = other.is_listened;
-    
     queue = other.queue;
     ident = other.ident;
     filter = other.filter;
     handler_ = std::move(other.handler_);
-    is_listened = other.is_listened;
+    is_listened = false;
     
-    other.is_listened = false;
+    // make other invalid
+    other.ident = -1;
     
-    if (previous) {
-        queue->add_event(static_cast<size_t>(ident), filter, &handler_);
+    assert(ident != -1);
+    
+    if (other.is_listened) {
+        queue->add_event(static_cast<size_t>(ident), filter, handler_);
     }
 }
 
 event_registration& event_registration::operator=(event_registration&& other)
 {
-    // mustn't listen events while move
+    // unsubscribe from previous event
     stop_listen();
-    bool previous = other.is_listened;
-    other.stop_listen();
     
     queue = other.queue;
     ident = other.ident;
     filter = other.filter;
     handler_ = std::move(other.handler_);
-    is_listened = other.is_listened;
+    is_listened = false;
     
-    if (previous) {
-        queue->add_event(static_cast<size_t>(ident), filter, &handler_);
+    //make other invalid
+    other.ident = -1;
+    
+    assert(ident != -1);
+    
+    if (other.is_listened) {
+        queue->add_event(static_cast<size_t>(ident), filter, handler_);
     }
     
     return *this;

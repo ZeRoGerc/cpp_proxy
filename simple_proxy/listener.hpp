@@ -16,11 +16,9 @@ struct listener {
 public:
     static void listen(proxy* proxy_server) {
         while (true) {
-            std::cerr << "LISTEN_ENTER\n";
             
             task current_task = proxy_server->get_background_task();
             
-            std::cerr << "LISTEN_EXECUTE\n";
             current_task();
         }
     }

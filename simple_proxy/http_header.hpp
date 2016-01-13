@@ -59,8 +59,6 @@ struct http_header {
         return data;
     }
     
-    bool is_valid() const;
-
     void init_properties();
     
     std::string retrieve_host() const;

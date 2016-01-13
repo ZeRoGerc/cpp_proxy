@@ -19,6 +19,8 @@
 #include <sys/event.h>
 #include <sys/time.h>
 #include <set>
+#include <map>
+#include <array>
 #include "tasks_poll.hpp"
 
 typedef std::function<void(struct kevent&)> handler;
@@ -31,17 +33,16 @@ public:
 
     void delete_event(size_t ident, int16_t filter);
 
-    void add_event(size_t ident, int16_t filter, handler* hand);
+    void add_event(size_t ident, int16_t filter, handler hand);
     
     void execute_in_main(task t);
     
     int occurred();
 
-    void execute();
+    void execute(int amount);
     
 private:
-//    static const int MAX_CONN = 1024;
-    struct kevent evlist[SOMAXCONN];
+    struct kevent evlist[1024];
     std::vector<bool> is_used = std::vector<bool>(SOMAXCONN);
     int kq;
     int main_socket;
@@ -51,10 +52,24 @@ private:
     std::mutex mutex;
     std::set< std::pair<size_t, int16_t> > deleted_events;
     
+    using map_type = std::map<size_t, handler>;
+    std::array<map_type, 2> handlers = { {map_type{}, map_type{}} };
+    
     handler main_thread_events_handler;
     std::vector<task> main_thread_tasks;
 
-    void event(size_t ident, int16_t filter, uint16_t flags, uint32_t fflags, int64_t data, handler* hand);
+    void event(size_t ident, int16_t filter, uint16_t flags, uint32_t fflags, int64_t data, handler hand);
+    
+    inline size_t event_type(int16_t filter) const {
+        switch (filter) {
+            case EVFILT_READ:
+                return 0;
+            case EVFILT_WRITE:
+                return 1;
+            default:
+                throw std::exception();
+        }
+    }
 };
 
 #endif /* event_queue_hpp */

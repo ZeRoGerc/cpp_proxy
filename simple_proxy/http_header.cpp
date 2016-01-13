@@ -55,16 +55,8 @@ void http_header::parse_content_length() {
     }
 }
 
-bool http_header::is_valid() const {
-    if (data.substr(0, 3) == "GET")
-        return true;
-    if (data.substr(0, 4) == "POST")
-        return true;
-    return false;
-}
-
 void http_header::parse_is_chunked_encoding() {
-    static const std::string chunked_encoding_mark{"Transfer-Encoding: chunked"};
+    static const std::string chunked_encoding_mark{"chunked"};
     
     if (data.find(chunked_encoding_mark) != std::string::npos) {
         if (type == Type::CONTENT) {

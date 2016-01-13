@@ -19,7 +19,6 @@ task tasks_poll::pop() {
     std::unique_lock<std::mutex> lock(mutex);
     
     while (_pull.size() == 0) {
-        std::cerr << "LISTEN_WAIT\n";
         condition.wait(lock);
     }
     

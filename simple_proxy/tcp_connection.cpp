@@ -80,31 +80,23 @@ void tcp_connection::start() {
 }
 
 bool tcp_connection::init_server(std::string const& ip, std::string const& host, size_t port) {
-    try {
-        //check if new server different to previous
-        if (server && !(server->get_host() == host)) {
-            safe_server_disconnect();
-        }
-
-        if (!server) {
-            server.reset(new proxy_client(ip, host, port));
-        }
-        
-        server->set_write_event(event_registration{
-            queue,
-            get_server_socket(),
-            EVFILT_WRITE,
-            handler{[this](struct kevent& event){
-                this->handle_server_disconnect(event);
-            }}
-        });
-        
-    } catch (std::exception const& e) {
-        std::cerr << std::strerror(errno) << '\n';
-        //send BAD request
-        safe_disconnect();
-        return false;
+    //check if new server different to previous
+    if (server && !(server->get_host() == host)) {
+        safe_server_disconnect();
     }
+
+    if (!server) {
+        server.reset(new proxy_client(ip, host, port));
+    }
+    
+    server->set_write_event(event_registration{
+        queue,
+        get_server_socket(),
+        EVFILT_WRITE,
+        handler{[this](struct kevent& event){
+            this->handle_server_disconnect(event);
+        }}
+    });
     return true;
 }
 
@@ -133,6 +125,10 @@ void tcp_connection::get_client_body(struct kevent &event) {
         return;
 
     std::string chunk = client->read(std::min(CHUNK_SIZE, body_buffer.amount_of_available_data()));
+    
+    
+//    std::cerr << "client body send " << chunk << std::endl;
+    
     body_buffer.append(chunk);
 }
 
@@ -144,7 +140,7 @@ void tcp_connection::get_client_header(struct kevent &event) {
 
     std::string chunk = client->read(CHUNK_SIZE);
 
-    std::cerr << "client " << chunk << "\n###################################\n";
+//    std::cerr << "client header send " << chunk << std::endl;
     header.append(chunk);
 
     if (header.get_state() == http_header::State::COMPLETE) {
@@ -164,15 +160,17 @@ void tcp_connection::get_client_header(struct kevent &event) {
                     size_t content_len = header.get_content_length() + header.size();
 
                     try {
-                        std::string ip = http_parse::get_ip_by_host(host);
+                        std::string ip = http_parse::get_ip_by_host(host, port);
                         queue->execute_in_main(task{[this, host, ip, port, content_len](){
+//                            std::cout << "MAIN TASK connection state " << int(this->state) << std::endl;
+                            state = State::UNDEFINED;
+                            
                             if (!client) {
                                 //if state is invalid just delete
                                 switch_state(State::DELETED);
                                 return;
                             }
-                            if (!init_server(ip, host, port))
-                                return;
+                            init_server(ip, host, port);
                             
                             //here we have valid server and valid client
                             body_buffer = buffer(header.get_string_representation(), static_cast<int>(content_len));
@@ -184,7 +182,8 @@ void tcp_connection::get_client_header(struct kevent &event) {
                         queue->execute_in_main(
                                                task{[this]()
                                                    {
-                                                       switch_state(State::DELETED);
+//                                                       std::cout << "MAIN TASK(exception) connection state " << int(this->state) << std::endl;
+                                                       state = State::UNDEFINED;
                                                        safe_disconnect();
                                                    }
                                                });
@@ -205,6 +204,9 @@ void tcp_connection::handle_client_write(struct kevent& event) {
     size_t len = client->send(body_buffer.get());
     assert(len != -1);
     
+    
+//    std::cerr << "client receive " << client->get_socket() << ' ' << body_buffer.get() << std::endl;
+    
     body_buffer.pop_front(len);
     
     //if server finish sending and client receive all available data
@@ -217,7 +219,11 @@ void tcp_connection::get_server_body(struct kevent &event) {
     if (handle_server_disconnect(event) || body_buffer.amount_of_available_data() == 0)
         return;
 
+    
     std::string chunk = server->read(CHUNK_SIZE);
+    
+//    std::cout << "server body send " << server->get_socket() << ' ' << chunk << std::endl;
+    
     body_buffer.append(chunk);
 }
 
@@ -227,7 +233,7 @@ void tcp_connection::get_server_header(struct kevent &event) {
 
     std::string chunk = server->read(CHUNK_SIZE);
 
-    std::cerr << "server " << chunk << "\n###################################\n";
+//    std::cout << "server header send " << server->get_socket() << ' ' << chunk << std::endl;
     header.append(chunk);
 
     if (header.get_state() == http_header::State::COMPLETE) {
@@ -250,6 +256,8 @@ void tcp_connection::handle_server_write(struct kevent& event) {
     
     size_t len = server->send(body_buffer.get());
     assert(len != -1);
+    
+//    std::cout << "server receive " << body_buffer.get(len) << std::endl;
     body_buffer.pop_front(len);
     
     //If we have already received all data from client and send it
@@ -283,16 +291,39 @@ bool tcp_connection::handle_client_disconnect(struct kevent& event) {
 }
 
 void tcp_connection::switch_state(State new_state) {
-    static auto client_disconnect = [this](struct kevent &event) {
-        this->handle_client_disconnect(event);
-    };
-    
-    static auto server_disconnect = [this](struct kevent &event) {
-        this->handle_server_disconnect(event);
-    };
-    
+    if (state == State::DELETED) {
+        throw std::exception();
+    }
     state = new_state;
-    std::cout << "switch_state" << static_cast<int>(new_state) << std::endl;
+    std::cout << "switch_state: ";
+    switch (new_state) {
+        case State::RECEIVE_CLIENT:
+            std::cout << "RECEIVE_CLIENT ";
+            break;
+        case State::RESOLVE:
+            std::cout << "RESOLVE ";
+            break;
+        case State::SEND_SERVER:
+            std::cout << "SEND_SERVER ";
+            break;
+        case State::RECEIVE_SERVER:
+            std::cout << "RECEIVE_SERVER ";
+            break;
+        case State::SEND_CLIENT:
+            std::cout << "SEND_CLIENT ";
+            break;
+        case State::DELETED:
+            std::cout << "DELETED ";
+            break;
+        default:
+            std::cout << "UNDEFINED ";
+            break;
+    }
+    
+    if (client) std::cout << "client: " << client->get_socket() << ' ';
+    if (server) std::cout << "server: " << server->get_socket() << ' ';
+    std::cout << std::endl;
+    
     switch (new_state) {
         case State::RECEIVE_CLIENT:
             header.clear();
@@ -300,7 +331,14 @@ void tcp_connection::switch_state(State new_state) {
             
             if (server) {
                 //listen only for disconnect
-                set_write_function(server, server_disconnect);
+                set_read_function(
+                                  server,
+                                  handler {
+                                      [this](struct kevent& event) {
+                                          handle_server_disconnect(event);
+                                      }
+                                  }
+                                  );
             }
             
             client->stop_write();
@@ -319,14 +357,28 @@ void tcp_connection::switch_state(State new_state) {
             if (client) {
                 //listen for disconnect
                 client->stop_listen();
-                set_write_function(client, client_disconnect);
-                client->resume_write();
+                set_read_function(
+                                  client,
+                                  handler {
+                                      [this](struct kevent& event) {
+                                          handle_client_disconnect(event);
+                                      }
+                                  }
+                                  );
+                client->resume_read();
             }
             if (server) {
                 //ditto
                 server->stop_listen();
-                set_write_function(server, server_disconnect);
-                server->resume_write();
+                set_read_function(
+                                  server,
+                                  handler {
+                                      [this](struct kevent& event) {
+                                          handle_server_disconnect(event);
+                                      }
+                                  }
+                                  );
+                server->resume_read();
             }
             break;
         case State::SEND_SERVER:
@@ -356,7 +408,14 @@ void tcp_connection::switch_state(State new_state) {
             header.clear();
             body_buffer.clear();
             
-            set_write_function(client, client_disconnect);
+            set_read_function(
+                              client,
+                              handler {
+                                  [this](struct kevent& event) {
+                                      handle_client_disconnect(event);
+                                  }
+                              }
+                              );
             server->stop_listen();
             set_read_function(
                               server,
@@ -391,13 +450,13 @@ void tcp_connection::switch_state(State new_state) {
         default:
             safe_client_disconnect();
             safe_server_disconnect();
+            deleter();
     }
 }
 
 void tcp_connection::set_read_function(std::unique_ptr<proxy_client>& object, handler hand) {
     assert(object);
     if (object->get_event_read().is_valid()) {
-        object->get_event_read().stop_listen();
         object->get_event_read().change_function(std::move(hand));
     } else {
         object->set_read_event(
@@ -414,7 +473,6 @@ void tcp_connection::set_read_function(std::unique_ptr<proxy_client>& object, ha
 void tcp_connection::set_write_function(std::unique_ptr<proxy_client>& object, handler hand) {
     assert(object);
     if (object->get_event_write().is_valid()) {
-        object->get_event_write().stop_listen();
         object->get_event_write().change_function(std::move(hand));
     } else {
         object->set_write_event(
