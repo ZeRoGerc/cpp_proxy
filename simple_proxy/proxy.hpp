@@ -15,6 +15,7 @@
 #include "event_queue.hpp"
 #include "tcp_connection.hpp"
 #include "event_registration.h"
+#include "lru_cache.hpp"
 
 struct tcp_connection;
 
@@ -25,15 +26,10 @@ public:
     proxy(proxy const&) = delete;
     proxy& operator=(proxy const&) = delete;
     
+    proxy(proxy&&) = delete;
+    proxy& operator=(proxy&&) = delete;
+    
     void main_loop();
-    
-    inline void add_background_task(task t) {
-        poll.push(t);
-    }
-    
-    inline task get_background_task() {
-        return poll.pop();
-    }
     
 private:
     event_queue* queue;
@@ -41,9 +37,10 @@ private:
     
     event_registration reg;
     
-    tasks_poll poll;
-    std::set<tcp_connection*> connections;
-    std::vector<tcp_connection*> deleted;
+    std::set<std::unique_ptr<tcp_connection>> connections;
+    std::vector<decltype(connections.begin())> deleted;
+    
+    lru_cache<std::string, std::string> responce_cache;
 };
 
 #endif /* proxy_hpp */

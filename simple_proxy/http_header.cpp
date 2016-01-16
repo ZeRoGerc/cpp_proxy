@@ -8,6 +8,7 @@
 
 #include "http_header.hpp"
 #include <assert.h>
+#include <iostream>
 
 void http_header::append(std::string const& chunk) {
     static const std::string header_end{"\r\n\r\n"};
@@ -121,7 +122,14 @@ void http_header::transform_to_relative() {
         return;
     
     std::string host = retrieve_host();
+    if (host == "localhost") {
+        return;
+    }
+    std::cout << "DATA " << data << std::endl;
     size_t host_pos = data.find(host);
+    size_t end = host_pos;
     
-    data = data.substr(0, pos) + data.substr(host_pos + host.length());
+    while (data[end] != '/') end++;
+    
+    data = data.substr(0, pos) + data.substr(end);
 }

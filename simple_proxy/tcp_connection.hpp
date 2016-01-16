@@ -23,6 +23,7 @@
 #include "http_header.hpp"
 #include "proxy.hpp"
 #include "proxy_client.h"
+#include "lru_cache.hpp"
 
 struct buffer {
 private:
@@ -36,9 +37,15 @@ private:
     int available_data = 0;
     
     /*
+     pointer to the last readed char
+     */
+    mutable size_t readed = 0;
+    
+    /*
      stores last bytes to determine end of chunked data
      */
     std::string tail;
+    
     static const std::string chunked_end;
     
 public:
@@ -57,12 +64,15 @@ public:
     
     void clear();
     
+    std::string get_all_data();
+    
     size_t size() const;
 };
 
 
 struct tcp_connection {
 private:
+    using cache_type = lru_cache<std::string, std::string>;
     static const int CHUNK_SIZE;
     static const int BUFFER_SIZE;
 
@@ -73,6 +83,7 @@ private:
     std::unique_ptr<proxy_client> client;
     std::unique_ptr<proxy_client> server;
     event_queue* queue;
+    cache_type* cache;
     
     /*
      funcition used for executeing tasks in background thread
@@ -119,7 +130,7 @@ private:
 
 public:
     //Don't forget to set callback and deleter after constructor
-    tcp_connection(event_queue* queue, int descriptor);
+    tcp_connection(event_queue* queue, cache_type* cache, int descriptor);
     
     ~tcp_connection();
 

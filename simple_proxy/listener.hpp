@@ -14,11 +14,9 @@
 
 struct listener {
 public:
-    static void listen(proxy* proxy_server) {
+    static void listen(event_queue* eq) {
         while (true) {
-            
-            task current_task = proxy_server->get_background_task();
-            
+            task current_task = eq->get_background_task();
             current_task();
         }
     }

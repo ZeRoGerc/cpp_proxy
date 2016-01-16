@@ -24,6 +24,7 @@ set(SOURCE_FILES
         simple_proxy/proxy_client.cpp
         simple_proxy/proxy_client.h
         simple_proxy/event_registration.cpp
-        simple_proxy/event_registration.h)
+        simple_proxy/event_registration.h
+        simple_proxy/lru_cache.hpp)
 
 add_executable(simple_proxy ${SOURCE_FILES} simple_proxy/event_queue.cpp simple_proxy/socket.cpp simple_proxy/main_server.cpp simple_proxy/proxy.cpp simple_proxy/proxy_client.cpp)

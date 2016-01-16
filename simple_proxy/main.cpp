@@ -28,8 +28,8 @@ int main(int argc, const char * argv[]) {
     event_queue kq(server.get_socket());
     proxy proxy_server{&kq, server.get_socket()};
 
-    std::thread th1(listener::listen, &proxy_server);
-    std::thread th2(listener::listen, &proxy_server);
+    std::thread th1(listener::listen, &kq);
+    std::thread th2(listener::listen, &kq);
 
     proxy_server.main_loop();
 }

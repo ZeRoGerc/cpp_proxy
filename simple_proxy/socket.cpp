@@ -11,7 +11,8 @@ socket::socket(int descriptor) {
     sockaddr client_addr;
     socklen_t client_size = sizeof(sockaddr);
     client_socket = accept(descriptor, &client_addr, &client_size);
-
+//    std::cout << "connected socket " << client_socket << std::endl;
+    
     if (client_socket == -1) {
         throw new std::exception();
     }
@@ -31,6 +32,7 @@ socket::socket(std::string const& ip, size_t port) {
     if (client_socket == -1) {
         throw new std::exception();
     }
+//    std::cout << "connected socket " << client_socket << std::endl;
 
     int flags;
     if (-1 == (flags = fcntl(client_socket, F_GETFL, 0))) {
@@ -52,5 +54,6 @@ socket::socket(std::string const& ip, size_t port) {
 }
 
 socket::~socket() {
+//    std::cout << "dicsonnected socket " << client_socket << std::endl;
     close(client_socket);
 }

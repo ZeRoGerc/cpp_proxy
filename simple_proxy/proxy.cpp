@@ -5,6 +5,8 @@
 #include "event_queue.hpp"
 #include "proxy.hpp"
 #include "listener.hpp"
+#include "tcp_connection.hpp"
+#include <memory>
 
 proxy::proxy(event_queue* queue, int descriptor)
 : queue(queue)
@@ -14,22 +16,17 @@ proxy::proxy(event_queue* queue, int descriptor)
       descriptor,
       EVFILT_READ,
       [this, queue, descriptor](struct kevent& event) {
-          tcp_connection* conn = new tcp_connection(queue, descriptor);
+//          auto conn = std::make_unique<tcp_connection>(queue, descriptor);
           
-          resolver callback = [this](task t) {
-              add_background_task(t);
+          //memory leak
+          auto iter = connections.insert(std::unique_ptr<tcp_connection>(new tcp_connection(queue, &responce_cache, descriptor))).first;
+          
+          std::function<void()> deleter = [this, iter]() {
+              deleted.push_back(iter);
           };
           
-          std::function<void()> deleter = [this, conn]() {
-              deleted.push_back(conn);
-          };
-          
-          conn->set_callback(callback);
-          conn->set_deleter(deleter);
-          
-          connections.insert(conn);
-          
-          conn->start();
+          (*iter)->set_deleter(deleter);
+          (*iter)->start();
       },
       true
       )
@@ -37,15 +34,11 @@ proxy::proxy(event_queue* queue, int descriptor)
 
 void proxy::main_loop() {
     while (true) {
+        for (auto& conn_iter: deleted) {
+            connections.erase(conn_iter);
+        }
+        deleted.clear();
         if (int amount = queue->occurred()) {
-            if (deleted.size() > 0) {
-                //delete all disconnected connections
-                for (tcp_connection* connection: deleted) {
-                    connections.erase(connection);
-                    delete connection;
-                }
-                deleted.clear();
-            }
             queue->execute(amount);
         }
     }
