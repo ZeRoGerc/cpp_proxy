@@ -50,7 +50,14 @@ private:
     
 public:
     buffer() {};
+    buffer(std::string);
     buffer(std::string, int amount_of_data);
+    
+    buffer(buffer const&) = delete;
+    buffer& operator=(buffer const&) = delete;
+    
+    buffer(buffer&&) = default;
+    buffer& operator=(buffer&&) = default;
     
     int amount_of_available_data() const {
         return available_data;
@@ -107,6 +114,8 @@ private:
      between server and client
      */
     buffer body_buffer;
+    
+    std::string current_url;
     
     bool init_server(std::string const& ip, std::string const& host, size_t port);
     //always be sure to call this ONLY in main thread

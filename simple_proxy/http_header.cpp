@@ -25,6 +25,9 @@ void http_header::init_properties() {
     static const std::string header_end{"\r\n\r\n"};
     type = Type::HEADER;
     
+    size_t pos = data.find("\r\n");
+    head = data.substr(0, pos);
+    
     transform_to_relative();
     parse_is_chunked_encoding();
     parse_content_length();
@@ -125,11 +128,46 @@ void http_header::transform_to_relative() {
     if (host == "localhost") {
         return;
     }
-    std::cout << "DATA " << data << std::endl;
+//    std::cout << "DATA " << data << std::endl;
     size_t host_pos = data.find(host);
     size_t end = host_pos;
     
     while (data[end] != '/') end++;
     
     data = data.substr(0, pos) + data.substr(end);
+}
+
+
+std::string http_header::get_field(std::string const& field) const {
+    size_t pos = data.find(field);
+    if (pos == std::string::npos) {
+        return "";
+    }
+    pos = pos + field.size() + 1; //skip :
+    
+    while (data[pos] == ' ') pos++;
+    
+    std::string result{};
+    while (data[pos] != ' ' && data[pos] != '\n' && data[pos] != '\r' && data[pos] != ',') {
+        result += data[pos];
+        pos++;
+    }
+    return result;
+}
+
+std::string http_header::get_url() const {
+    size_t pos = data.find(' ');
+    while (data[pos] == ' ') pos++;
+    
+    std::string result{retrieve_host()};
+    while (data[pos] != ' ') {
+        result += data[pos];
+        pos++;
+    }
+    return result;
+}
+
+
+void http_header::add_line(std::string const& key, std::string const value) {
+    data.substr(0, data.size() - 2) + key + ": " + value + "\n" + data.substr(data.size() - 2);
 }

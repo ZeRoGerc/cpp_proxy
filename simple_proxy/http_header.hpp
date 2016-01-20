@@ -59,13 +59,30 @@ struct http_header {
         return data;
     }
     
-    void init_properties();
+    inline bool has_field(std::string const& field) const {
+        return data.find(field) != std::string::npos;
+    }
+    
+    inline bool find_in_head(std::string const& temp) const {
+        return head.find(temp) != std::string::npos;
+    }
+    
+    std::string get_field(std::string const& field) const;
+    
+    std::string get_url() const;
     
     std::string retrieve_host() const;
+    
     size_t retrieve_port() const;
+    
+    void add_line(std::string const& key, std::string const value);
+    
+    void init_properties();
+    
     
 private:
     std::string data;
+    std::string head;
     Type type = Type::UNDEFINED;
     State state = State::READING;
     

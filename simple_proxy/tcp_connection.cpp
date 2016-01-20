@@ -10,9 +10,33 @@
 #include "socket.hpp"
 #include "tcp_connection.hpp"
 
-const std::string buffer::chunked_end{"\r\n0\r\n\r\n"};
+const std::string buffer::chunked_end{"0\r\n\r\n"};
 const int tcp_connection::CHUNK_SIZE = 1024;
 const int tcp_connection::BUFFER_SIZE = 16384;
+
+std::string get_field(std::string const& data, std::string const& field) {
+    size_t pos = data.find(field);
+    if (pos == std::string::npos) {
+        return "";
+    }
+    pos = pos + field.size() + 1; //+ 1 - skip :
+    
+    while (data[pos] == ' ') pos++;
+    
+    std::string result{};
+    while (data[pos] != ' ' && data[pos] != '\n' && data[pos] != '\r') {
+        result += data[pos];
+        pos++;
+    }
+    return result;
+}
+
+buffer::buffer(std::string chunk) {
+    available_data = 0;
+    readed = 0;
+    tail = std::string();
+    data = chunk;
+}
 
 buffer::buffer(std::string chunk, int amount_of_data) {
     available_data = amount_of_data;
@@ -137,10 +161,9 @@ void tcp_connection::get_client_body(struct kevent &event) {
     if (handle_client_disconnect(event) || body_buffer.amount_of_available_data() == 0)
         return;
 
-    std::string chunk = client->read(std::min(CHUNK_SIZE, body_buffer.amount_of_available_data()));
-    
-    
-    std::cerr << "client body send " << client->get_socket() << ' ' << chunk << std::endl;
+    std::string chunk = client->read(CHUNK_SIZE);
+   
+//    std::cerr << "client body send " << client->get_socket() << ' ' << chunk << std::endl;
     
     body_buffer.append(chunk);
 }
@@ -153,11 +176,26 @@ void tcp_connection::get_client_header(struct kevent &event) {
 
     std::string chunk = client->read(CHUNK_SIZE);
 
-    std::cerr << "client header send " << client->get_socket() << ' '  << chunk << std::endl;
+//    std::cerr << "client header send " << client->get_socket() << ' '  << chunk << std::endl;
     header.append(chunk);
 
     if (header.get_state() == http_header::State::COMPLETE) {
         switch_state(State::RESOLVE);
+        
+        current_url = header.get_url();
+        
+        if (header.has_field("If-Match")
+            || header.has_field("If-Modified-Since")
+            || header.has_field("If-None-Match")
+            || header.has_field("If-Range")
+            || header.has_field("If-Unmodified-Since")) {
+            //client not interested in caching
+            current_url = "";
+        }
+        
+        if (cache->is_cached(current_url)) {
+            header.add_line("If-None-Match", get_field(cache->get(current_url), "ETag"));
+        }
         
         task resolve {
                 [this]() {
@@ -218,13 +256,17 @@ void tcp_connection::handle_client_write(struct kevent& event) {
     assert(len != -1);
     
     
-    std::cerr << "client receive " << client->get_socket() << ' ' << body_buffer.get() << std::endl;
+//    std::cerr << "client receive " << client->get_socket() << ' ' << body_buffer.get() << std::endl;
     
     body_buffer.pop_front(len);
     
     //if server finish sending and client receive all available data
     if (body_buffer.size() == 0 && body_buffer.amount_of_available_data() == 0) {
         client->stop_write();
+        if (current_url.size() != 0) {
+            //cache responce
+            cache->append(current_url, body_buffer.get_all_data());
+        }
         switch_state(State::RECEIVE_CLIENT); //start new request
     }
 }
@@ -232,11 +274,10 @@ void tcp_connection::handle_client_write(struct kevent& event) {
 void tcp_connection::get_server_body(struct kevent &event) {
     if (handle_server_disconnect(event) || body_buffer.amount_of_available_data() == 0)
         return;
-
     
     std::string chunk = server->read(CHUNK_SIZE);
     
-    std::cout << "server body send " << server->get_socket() << ' ' << chunk << std::endl;
+//    std::cout << "server body send " << server->get_socket() << ' ' << chunk << std::endl;
     
     body_buffer.append(chunk);
 }
@@ -247,14 +288,29 @@ void tcp_connection::get_server_header(struct kevent &event) {
 
     std::string chunk = server->read(CHUNK_SIZE);
 
-    std::cout << "server header send " << server->get_socket() << ' ' << chunk << std::endl;
+//    std::cout << "server header send " << server->get_socket() << ' ' << chunk << std::endl;
     header.append(chunk);
 
     if (header.get_state() == http_header::State::COMPLETE) {
+        /*
+         Parse answer from server
+         */
+        
+        if (cache->is_cached(current_url) && header.find_in_head("304")) {
+            body_buffer = buffer(cache->get(current_url));
+            switch_state(State::SEND_CLIENT);
+            return;
+        }
+        
+        if (header.get_field("Cache-Control") == "private"
+            || header.get_field("Cache-Control") == "no-store"
+            || header.get_field("ETag") == "") {
+            //no caching
+            current_url.clear();
+        }
         
         if (header.get_type() == http_header::Type::CHUNKED) {
             body_buffer = buffer(header.get_string_representation(), -1);
-            
         } else {
             body_buffer = buffer(header.get_string_representation(), static_cast<int>(header.get_content_length() + header.size()));
         }
@@ -404,6 +460,7 @@ void tcp_connection::switch_state(State new_state) {
                               );
             break;
         case State::SEND_CLIENT:
+            
             set_write_function(
                                client,
                                [this](struct kevent &event) {
