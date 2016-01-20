@@ -92,6 +92,8 @@ private:
     event_queue* queue;
     cache_type* cache;
     
+    event_registration client_timer;
+    
     /*
      funcition used for executeing tasks in background thread
      */

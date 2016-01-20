@@ -102,7 +102,26 @@ size_t buffer::size() const {
 }
 
 tcp_connection::tcp_connection(event_queue* q, cache_type* cache, int descriptor)
-    : queue(q), cache(cache), client(new proxy_client(descriptor)), server(nullptr) {}
+    : queue(q), cache(cache), client(new proxy_client(descriptor)), server(nullptr)
+{
+    client_timer = std::move(
+                             event_registration {
+                                 queue,
+                                 client->get_socket(),
+                                 EVFILT_TIMER,
+                                 NULL,
+                                 NOTE_SECONDS,
+                                 600,
+                                 handler{
+                                     [this](struct kevent& event) {
+                                         std::cout << "TIMER";
+                                         safe_disconnect();
+                                     }
+                                 },
+                                 true
+                             }
+    );
+}
 
 void tcp_connection::start() {
     set_read_function(
@@ -118,13 +137,8 @@ void tcp_connection::start() {
 
 bool tcp_connection::init_server(std::string const& ip, std::string const& host, size_t port) {
     //check if new server different to previous
-    if (server && !(server->get_host() == host)) {
-        safe_server_disconnect();
-    }
 
-    if (!server) {
-        server.reset(new proxy_client(ip, host, port));
-    }
+    server.reset(new proxy_client(ip, host, port));
     
     set_read_function(
                       server,
@@ -137,13 +151,17 @@ bool tcp_connection::init_server(std::string const& ip, std::string const& host,
     return true;
 }
 
-tcp_connection::~tcp_connection() {}
+tcp_connection::~tcp_connection() {
+    server.reset(nullptr);
+    client.reset(nullptr);
+}
 
 void tcp_connection::safe_server_disconnect() {
     server.reset(nullptr);
 }
 
 void tcp_connection::safe_client_disconnect() {
+    client_timer.invalidate();
     client.reset(nullptr);
 }
 
@@ -218,6 +236,7 @@ void tcp_connection::get_client_header(struct kevent &event) {
                             
                             if (!client) {
                                 //if state is invalid just delete
+                                std::cout << "after resolve client deleted\n";
                                 switch_state(State::DELETED);
                                 return;
                             }
@@ -233,7 +252,7 @@ void tcp_connection::get_client_header(struct kevent &event) {
                         queue->execute_in_main(
                                                task{[this]()
                                                    {
-//                                                       std::cout << "MAIN TASK(exception) connection state " << int(this->state) << std::endl;
+                                                       std::cout << "MAIN TASK(exception) connection state " << int(this->state) << std::endl;
                                                        state = State::UNDEFINED;
                                                        safe_disconnect();
                                                    }
@@ -327,7 +346,7 @@ void tcp_connection::handle_server_write(struct kevent& event) {
     size_t len = server->send(body_buffer.get());
     assert(len != -1);
     
-    std::cout << "server receive " << body_buffer.get(len) << std::endl;
+    std::cout << "server receive " << server->get_socket() << ' ' << body_buffer.get(len) << std::endl;
     body_buffer.pop_front(len);
     
     //If we have already received all data from client and send it
@@ -341,6 +360,8 @@ bool tcp_connection::handle_server_disconnect(struct kevent& event) {
     if (state == State::DELETED) {
         return true;
     }
+    client_timer.refresh();
+    
     if ((event.flags & EV_EOF) && (event.data == 0)) {
         safe_server_disconnect();
         return true;
@@ -352,6 +373,8 @@ bool tcp_connection::handle_client_disconnect(struct kevent& event) {
     if (state == State::DELETED) {
         return true;
     }
+    client_timer.refresh();
+    
     if ((event.flags & EV_EOF) && (event.data == 0)) {
         safe_disconnect();
         return true;

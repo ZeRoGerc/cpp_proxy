@@ -18,7 +18,6 @@ proxy::proxy(event_queue* queue, int descriptor)
       [this, queue, descriptor](struct kevent& event) {
 //          auto conn = std::make_unique<tcp_connection>(queue, descriptor);
           
-          //memory leak
           auto iter = connections.insert(std::unique_ptr<tcp_connection>(new tcp_connection(queue, &responce_cache, descriptor))).first;
           
           std::function<void()> deleter = [this, iter]() {

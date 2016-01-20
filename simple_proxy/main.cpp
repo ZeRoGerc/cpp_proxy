@@ -24,7 +24,7 @@ int main(int argc, const char * argv[]) {
     sigaddset(&mask,SIGPIPE);
     sigprocmask(SIG_BLOCK, &mask, NULL);
     
-    main_server server(2537);
+    main_server server(2538);
     event_queue kq(server.get_socket());
     proxy proxy_server{&kq, server.get_socket()};
 

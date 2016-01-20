@@ -31,7 +31,9 @@ public:
 
     void delete_event(size_t ident, int16_t filter);
 
-    void add_event(size_t ident, int16_t filter, handler hand);
+    void add_event(size_t ident, int16_t filter, handler* hand);
+    
+    void event(size_t ident, int16_t filter, uint16_t flags, uint32_t fflags, int64_t data, handler* hand);
     
     void execute_in_main(task t);
     
@@ -52,14 +54,12 @@ private:
     std::mutex mutex;
     std::set< std::pair<size_t, int16_t> > deleted_events;
     
-    using map_type = std::map<size_t, handler>;
-    std::array<map_type, 2> handlers = { {map_type{}, map_type{}} };
+//    using map_type = std::map<size_t, handler>;
+//    std::array<map_type, 2> handlers = { {map_type{}, map_type{}} };
     
     handler main_thread_events_handler;
     std::vector<task> main_thread_tasks;
     tasks_poll background_tasks;
-    
-    void event(size_t ident, int16_t filter, uint16_t flags, uint32_t fflags, int64_t data, handler hand);
     
     inline size_t event_type(int16_t filter) const {
         switch (filter) {
