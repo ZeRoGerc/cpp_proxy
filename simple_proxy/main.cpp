@@ -19,17 +19,14 @@
 #include "listener.hpp"
 
 int main(int argc, const char * argv[]) {
-    sigset_t mask;
-    sigemptyset(&mask);
-    sigaddset(&mask,SIGPIPE);
-    sigprocmask(SIG_BLOCK, &mask, NULL);
+//    sigset_t mask;
+//    sigemptyset(&mask);
+//    sigaddset(&mask,SIGPIPE);
+//    sigprocmask(SIG_BLOCK, &mask, NULL);
     
     main_server server(2538);
     event_queue kq(server.get_socket());
     proxy proxy_server{&kq, server.get_socket()};
-
-    std::thread th1(listener::listen, &kq);
-    std::thread th2(listener::listen, &kq);
 
     proxy_server.main_loop();
 }

@@ -21,9 +21,36 @@
 #include <set>
 #include <map>
 #include <array>
+#include <thread>
 #include "tasks_poll.hpp"
 
 typedef std::function<void(struct kevent&)> handler;
+
+struct background_tasks_handler {
+    background_tasks_handler(background_tasks_handler const&) = delete;
+    background_tasks_handler& operator=(background_tasks_handler const&) = delete;
+    
+    background_tasks_handler(background_tasks_handler&&) = default;
+    background_tasks_handler& operator=(background_tasks_handler&&) = default;
+
+    background_tasks_handler();
+    ~background_tasks_handler();
+    
+    void push(task t);
+    
+    void stop();
+    
+private:
+    static const size_t THREADS_AMOUNT = 4;
+    
+    void execute();
+    
+    std::queue<task> poll;
+    std::condition_variable condition;
+    std::mutex mutex;
+    bool work;
+    std::vector<std::thread> threads;
+};
 
 struct event_queue {
 public:
@@ -44,6 +71,8 @@ public:
     int occurred();
 
     void execute(int amount);
+    
+    void stop_resolve();
 private:
     struct kevent evlist[1024];
     int kq;
@@ -54,12 +83,9 @@ private:
     std::mutex mutex;
     std::set< std::pair<size_t, int16_t> > deleted_events;
     
-//    using map_type = std::map<size_t, handler>;
-//    std::array<map_type, 2> handlers = { {map_type{}, map_type{}} };
-    
     handler main_thread_events_handler;
     std::vector<task> main_thread_tasks;
-    tasks_poll background_tasks;
+    background_tasks_handler background_tasks;
     
     inline size_t event_type(int16_t filter) const {
         switch (filter) {

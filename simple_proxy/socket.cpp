@@ -54,6 +54,5 @@ socket::socket(std::string const& ip, size_t port) {
 }
 
 socket::~socket() {
-//    std::cout << "dicsonnected socket " << client_socket << std::endl;
     close(client_socket);
 }

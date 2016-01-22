@@ -6,6 +6,62 @@
 #include <assert.h>
 #include "event_queue.hpp"
 
+
+background_tasks_handler::background_tasks_handler(): work(true) {
+    for (int i = 0; i < THREADS_AMOUNT; i++) {
+        threads.push_back(std::thread(
+                                      [this](){
+                                          execute();
+                                      }
+                          ));
+    }
+}
+
+
+background_tasks_handler::~background_tasks_handler() {
+    stop();
+}
+
+
+void background_tasks_handler::push(task t) {
+    std::unique_lock<std::mutex> lock(mutex);
+    poll.push(t);
+    
+    condition.notify_one();
+}
+
+
+void background_tasks_handler::execute() {
+    while(work) {
+        std::unique_lock<std::mutex> lock(mutex);
+        
+        while (poll.size() == 0) {
+            condition.wait(lock);
+            if (!work) break;
+        }
+        
+        if (!work) return;
+        
+        //We've got one
+        task current = poll.front();
+        poll.pop();
+        
+        lock.unlock();
+        //execute
+        current();
+    }
+}
+
+void background_tasks_handler::stop() {
+    work = false;
+    condition.notify_all();
+    
+    for (int i = 0; i < THREADS_AMOUNT; i++)
+        if (threads[i].joinable())
+            threads[i].join();
+}
+
+
 event_queue::event_queue(int main_socket) : main_socket(main_socket) {
     kq = kqueue();
     int fds[2];
@@ -30,6 +86,7 @@ event_queue::event_queue(int main_socket) : main_socket(main_socket) {
     add_event(pipe_out, EVFILT_READ, &main_thread_events_handler);
 }
 
+
 void event_queue::delete_event(size_t ident, int16_t filter) {
     
     if (deleted_events.find(std::make_pair(ident, filter)) == deleted_events.end()) {
@@ -40,10 +97,12 @@ void event_queue::delete_event(size_t ident, int16_t filter) {
     }
 }
 
+
 void event_queue::add_event(size_t ident, int16_t filter, handler* hand) {
     std::cout << "add " << ident << ' ' << filter << std::endl;
     event(ident, filter, EV_ADD, NULL, NULL, hand);
 }
+
 
 void event_queue::execute_in_main(task t) {
     std::lock_guard<std::mutex> locker{mutex};
@@ -51,18 +110,16 @@ void event_queue::execute_in_main(task t) {
     write(pipe_in, "T", 1);
 }
 
+
 void event_queue::execute_in_background(task t) {
     background_tasks.push(t);
 }
 
 
-task event_queue::get_background_task() {
-    return background_tasks.pop();
-}
-
 int event_queue::occurred() {
     return kevent(kq, NULL, 0, evlist, SOMAXCONN, NULL);
 }
+
 
 void event_queue::execute(int amount) {
     deleted_events.clear();
@@ -78,6 +135,14 @@ void event_queue::execute(int amount) {
         }
     }
 }
+
+
+void event_queue::stop_resolve() {
+    background_tasks.stop();
+    close(pipe_in);
+    close(pipe_out);
+}
+
 
 void event_queue::event(size_t ident, int16_t filter, uint16_t flags, uint32_t fflags, int64_t data, handler* hand) {
     struct kevent temp_event;

@@ -83,9 +83,10 @@ private:
     static const int CHUNK_SIZE;
     static const int BUFFER_SIZE;
 
-    enum class State {UNDEFINED, RECEIVE_CLIENT, RESOLVE, SEND_SERVER, RECEIVE_SERVER, SEND_CLIENT, DELETED};
+    enum class State {RECEIVE_CLIENT, RESOLVE, SEND_SERVER, RECEIVE_SERVER, SEND_CLIENT, RESOLVE_DELETED};
 
-    State state = State::UNDEFINED;
+    int client_s;
+    State state;
     
     std::unique_ptr<proxy_client> client;
     std::unique_ptr<proxy_client> server;
@@ -119,6 +120,8 @@ private:
     
     std::string current_url;
     
+    bool deleted = false;
+    
     bool init_server(std::string const& ip, std::string const& host, size_t port);
     //always be sure to call this ONLY in main thread
     void switch_state(State new_state);
@@ -138,6 +141,8 @@ private:
     //event_registration is_listen is always false after finishing
     void set_read_function(std::unique_ptr<proxy_client>&, handler);
     void set_write_function(std::unique_ptr<proxy_client>&, handler);
+    
+    void disconnect();
 
 public:
     //Don't forget to set callback and deleter after constructor

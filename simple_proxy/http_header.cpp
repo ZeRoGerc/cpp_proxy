@@ -72,7 +72,7 @@ void http_header::parse_is_chunked_encoding() {
 }
 
 std::string http_header::retrieve_host() const {
-    static const std::string host_mark("Host: ");
+    static const std::string host_mark("\r\nHost:");
     
     size_t pos = data.find(std::string(host_mark));
     if (pos == std::string::npos) {
@@ -81,6 +81,8 @@ std::string http_header::retrieve_host() const {
     
     std::string host;
     pos += host_mark.size();
+    while (data[pos] == ' ') pos++;
+    
     while (data[pos] != '\n' && data[pos] != '\r' && data[pos] != ':') {
         host += data[pos++];
     }
@@ -90,11 +92,16 @@ std::string http_header::retrieve_host() const {
 
 
 size_t http_header::retrieve_port() const {
-    static const std::string host_mark("Host: ");
+    static const std::string host_mark("\r\nHost:");
     
     size_t pos = data.find(host_mark);
+    if (pos == std::string::npos) {
+        return 80;
+    }
     
     pos += host_mark.size();
+    while (data[pos] == ' ') pos++;
+    
     while (data[pos] != '\n' && data[pos] != '\r' && data[pos] != ':') {
         pos++;
     }

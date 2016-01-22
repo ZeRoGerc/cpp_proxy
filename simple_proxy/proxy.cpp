@@ -16,8 +16,6 @@ proxy::proxy(event_queue* queue, int descriptor)
       descriptor,
       EVFILT_READ,
       [this, queue, descriptor](struct kevent& event) {
-//          auto conn = std::make_unique<tcp_connection>(queue, descriptor);
-          
           auto iter = connections.insert(std::unique_ptr<tcp_connection>(new tcp_connection(queue, &responce_cache, descriptor))).first;
           
           std::function<void()> deleter = [this, iter]() {
@@ -29,16 +27,58 @@ proxy::proxy(event_queue* queue, int descriptor)
       },
       true
       )
+, sigint(
+         queue,
+         SIGINT,
+         EVFILT_SIGNAL,
+         [this](struct kevent event) {
+             std::cout << "SIGINT";
+             hard_stop();
+         },
+         true
+         )
 {}
 
+proxy::~proxy() {
+    reg.stop_listen();
+    sigint.stop_listen();
+    queue->stop_resolve();
+    
+}
+
 void proxy::main_loop() {
-    while (true) {
-        for (auto& conn_iter: deleted) {
-            connections.erase(conn_iter);
+    try {
+        while (work) {
+            for (auto& conn_iter: deleted) {
+                connections.erase(conn_iter);
+            }
+            deleted.clear();
+            
+            std::cout << "CONNECTIONS " << connections.size() << std::endl;
+            if (int amount = queue->occurred()) {
+                queue->execute(amount);
+            }
+            
+            if (soft_exit && connections.size() == 0) {
+                return;
+            }
         }
-        deleted.clear();
-        if (int amount = queue->occurred()) {
-            queue->execute(amount);
-        }
+    } catch(...) {
+        hard_stop();
     }
+}
+
+
+void proxy::hard_stop() {
+    queue->stop_resolve();
+    work = false;
+}
+
+
+void proxy::soft_stop() {
+    soft_exit = true;
+    reg.stop_listen();
+    
+    //finish working with existing connections
+    main_loop();
 }

@@ -29,7 +29,7 @@ public:
     lru_cache& operator=(lru_cache&&) = default;
     
     void append(K const& key, V&& value) {
-//        std::cout << "CACHED " << std::endl;
+        std::cout << "CACHED " << std::endl;
 //        std::cout << key << std::endl;
 //        std::cout << value << std::endl;
         
@@ -54,7 +54,7 @@ public:
     
     const V& get(const K& key) const {
         auto it = map.find(key);
-//        std::cout << "FROM CACHE " << key << std::endl;
+        std::cout << "FROM CACHE " << key << std::endl;
         if (it == map.end()) {
             throw std::exception();
         } else {
