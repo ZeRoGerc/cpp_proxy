@@ -22,9 +22,10 @@
 #include <map>
 #include <array>
 #include <thread>
-#include "tasks_poll.hpp"
+#include <queue>
 
-typedef std::function<void(struct kevent&)> handler;
+using handler = std::function<void(struct kevent&)>;
+using task = std::function<void()>;
 
 struct background_tasks_handler {
     background_tasks_handler(background_tasks_handler const&) = delete;
@@ -54,7 +55,7 @@ private:
 
 struct event_queue {
 public:
-    event_queue(int main_socket);
+    event_queue();
 
     void delete_event(size_t ident, int16_t filter);
 
@@ -66,8 +67,6 @@ public:
     
     void execute_in_background(task t);
     
-    task get_background_task();
-    
     int occurred();
 
     void execute(int amount);
@@ -76,7 +75,6 @@ public:
 private:
     struct kevent evlist[1024];
     int kq;
-    int main_socket;
     int pipe_in;
     int pipe_out;
 

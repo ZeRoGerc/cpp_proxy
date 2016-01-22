@@ -10,6 +10,10 @@
 #include "socket.hpp"
 #include "tcp_connection.hpp"
 
+const std::string BAD_REQUEST = "HTTP/1.1 400 Bad Request\r\nServer: proxy\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 164\r\nConnection: close\r\n\r\n<html>\r\n<head><title>400 Bad Request</title></head>\r\n<body bgcolor=\"white\">\r\n<center><h1>400 Bad Request</h1></center>\r\n<hr><center>proxy</center>\r\n</body>\r\n</html>";
+
+const std::string NOT_FOUND = "HTTP/1.1 404 Not Found\r\nServer: proxy\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 160\r\nConnection: close\r\n\r\n<html>\r\n<head><title>404 Not Found</title></head>\r\n<body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>proxy</center>\r\n</body>\r\n</html>";
+
 const std::string buffer::chunked_end{"0\r\n\r\n"};
 const int tcp_connection::CHUNK_SIZE = 1024;
 const int tcp_connection::BUFFER_SIZE = 16384;
@@ -150,6 +154,7 @@ bool tcp_connection::init_server(std::string const& ip, std::string const& host,
                           );
         return true;
     } catch (...) {
+        server.reset(nullptr);
         return false;
     }
 }
@@ -181,7 +186,6 @@ void tcp_connection::safe_disconnect() {
 void tcp_connection::disconnect() {
     safe_client_disconnect();
     safe_server_disconnect();
-    state = State::RESOLVE_DELETED;
     
     deleter();
 }
@@ -205,7 +209,7 @@ void tcp_connection::get_client_header(struct kevent &event) {
 
     std::string chunk = client->read(CHUNK_SIZE);
 
-//    std::cerr << "client header send " << client->get_socket() << ' '  << chunk << std::endl;
+    std::cerr << "client header send " << client->get_socket() << ' '  << chunk << std::endl;
     header.append(chunk);
 
     if (header.get_state() == http_header::State::COMPLETE) {
@@ -235,26 +239,26 @@ void tcp_connection::get_client_header(struct kevent &event) {
                      we could check state of client
                      if client doesn't exist it means that connection die
                      */
-                    std::cout << "task started " << client_s;
 
                     try {
                         std::string host = header.retrieve_host();
                         size_t port = header.retrieve_port();
                         // since we pass data as header + body
                         size_t content_len = header.get_content_length() + header.size();
-                        std::string ip = http_parse::get_ip_by_host(host, port);
+                        std::string ip = http_header::get_ip_by_host(host, port);
                         queue->execute_in_main(task{[this, host, ip, port, content_len](){
-                            //                            std::cout << "MAIN TASK connection state " << int(this->state) << std::endl;
-                            
                             if (deleted) {
                                 //if state is invalid just delete
                                 std::cout << "after resolve client deleted\n";
                                 disconnect();
                                 return;
                             }
+                            std::cout << "RESOLVED " << client_s << std::endl;
                             bool is_ok = init_server(ip, host, port);
                             if (!is_ok) {
-                                disconnect();
+                                body_buffer = buffer(NOT_FOUND, static_cast<int>(NOT_FOUND.size()));
+                                switch_state(State::SEND_CLIENT);
+                                return;
                             }
                             //here we have valid server and valid client
                             body_buffer = buffer(header.get_string_representation(), static_cast<int>(content_len));
@@ -266,8 +270,9 @@ void tcp_connection::get_client_header(struct kevent &event) {
                         queue->execute_in_main(
                                                task{[this]()
                                                    {
-                                                       std::cout << "MAIN TASK(exception) connection state " << client_s << std::endl;
-                                                       disconnect();
+                                                       body_buffer = buffer(BAD_REQUEST, static_cast<int>(BAD_REQUEST.size()));
+                                                       switch_state(State::SEND_CLIENT);
+                                                       return;
                                                    }
                                                });
                     }
@@ -502,15 +507,11 @@ void tcp_connection::switch_state(State new_state) {
                               }
                               );
             break;
-//        default:
-//            safe_client_disconnect();
-//            safe_server_disconnect();
-//            deleter();
     }
 }
 
 void tcp_connection::set_read_function(std::unique_ptr<proxy_client>& object, handler hand) {
-    assert(object);
+    if (!object) return;
     if (object->get_event_read().is_valid()) {
         object->get_event_read().change_function(std::move(hand));
     } else {
@@ -527,7 +528,7 @@ void tcp_connection::set_read_function(std::unique_ptr<proxy_client>& object, ha
 }
 
 void tcp_connection::set_write_function(std::unique_ptr<proxy_client>& object, handler hand) {
-    assert(object);
+    if (!object) return;
     if (object->get_event_write().is_valid()) {
         object->get_event_write().change_function(std::move(hand));
     } else {

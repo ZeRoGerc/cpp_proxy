@@ -5,7 +5,7 @@
 #include <sys/socket.h>
 #include <assert.h>
 #include "event_queue.hpp"
-
+#include "custom_exception.hpp"
 
 background_tasks_handler::background_tasks_handler(): work(true) {
     for (int i = 0; i < THREADS_AMOUNT; i++) {
@@ -62,11 +62,11 @@ void background_tasks_handler::stop() {
 }
 
 
-event_queue::event_queue(int main_socket) : main_socket(main_socket) {
+event_queue::event_queue() {
     kq = kqueue();
     int fds[2];
     if (pipe(fds) == -1) {
-        throw std::exception();
+        throw custom_exception("fail to create pipe fd");
     }
     pipe_in = fds[1];
     pipe_out = fds[0];
@@ -150,8 +150,9 @@ void event_queue::event(size_t ident, int16_t filter, uint16_t flags, uint32_t f
     EV_SET(&temp_event, ident, filter, flags, fflags, data, static_cast<void*>(hand));
 
     if (kevent(kq, &temp_event, 1, NULL, 0, NULL) == -1) {
-        std::cout << std::strerror(errno);
-        throw std::exception();
+        std::string message{"kevent fails: "};
+        message.append(std::strerror(errno));
+        throw custom_exception(message);
     }
     
     if (flags & EV_DELETE) {

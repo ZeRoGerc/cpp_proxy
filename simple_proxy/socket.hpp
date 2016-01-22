@@ -9,18 +9,10 @@
 #ifndef socket_hpp
 #define socket_hpp
 
-#include <stdio.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <fcntl.h>
-#include <cstring>
-#include <cmath>
 #include <string>
 
 struct socket {
 public:
-    
     socket(socket const& other) = delete;
     socket & operator=(socket const& other) = delete;
 

@@ -18,8 +18,6 @@
 #include <arpa/inet.h>
 
 #include "event_queue.hpp"
-#include "http_parse.hpp"
-#include "tasks_poll.hpp"
 #include "http_header.hpp"
 #include "proxy.hpp"
 #include "proxy_client.h"
@@ -83,7 +81,7 @@ private:
     static const int CHUNK_SIZE;
     static const int BUFFER_SIZE;
 
-    enum class State {RECEIVE_CLIENT, RESOLVE, SEND_SERVER, RECEIVE_SERVER, SEND_CLIENT, RESOLVE_DELETED};
+    enum class State {RECEIVE_CLIENT, RESOLVE, SEND_SERVER, RECEIVE_SERVER, SEND_CLIENT};
 
     int client_s;
     State state;
@@ -94,11 +92,6 @@ private:
     cache_type* cache;
     
     event_registration client_timer;
-    
-    /*
-     funcition used for executeing tasks in background thread
-     */
-    resolver callback;
     
     /*
      callback to proxy server
@@ -159,8 +152,6 @@ public:
         assert(server);
         return server->get_socket();
     }
-    
-    void set_callback(resolver callback);
     
     void set_deleter(std::function<void()> del);
     

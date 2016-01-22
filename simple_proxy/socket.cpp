@@ -3,9 +3,18 @@
 //
 
 #include "socket.hpp"
+#include "custom_exception.hpp"
 
 #include <iostream>
 #include <sys/socket.h>
+#include <stdio.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <fcntl.h>
+#include <cstring>
+#include <cmath>
+#include <string>
 
 socket::socket(int descriptor) {
     sockaddr client_addr;
@@ -14,7 +23,9 @@ socket::socket(int descriptor) {
 //    std::cout << "connected socket " << client_socket << std::endl;
     
     if (client_socket == -1) {
-        throw new std::exception();
+        std::string message{"fail to create socket: "};
+        message.append(std::strerror(errno));
+        throw custom_exception(message);
     }
     
     int flags;
@@ -22,15 +33,18 @@ socket::socket(int descriptor) {
         flags = 0;
     }
     if (fcntl(client_socket, F_SETFL, flags | O_NONBLOCK) == -1) {
-        std::cerr << std::strerror(errno);
-        throw std::exception();
+        std::string message{"fail to create socket: "};
+        message.append(std::strerror(errno));
+        throw custom_exception(message);
     }
 }
 
 socket::socket(std::string const& ip, size_t port) {
     client_socket = ::socket(AF_INET, SOCK_STREAM, 0);
     if (client_socket == -1) {
-        throw new std::exception();
+        std::string message{"fail to create socket: "};
+        message.append(std::strerror(errno));
+        throw custom_exception(message);
     }
 //    std::cout << "connected socket " << client_socket << std::endl;
 
@@ -39,7 +53,9 @@ socket::socket(std::string const& ip, size_t port) {
         flags = 0;
     }
     if (fcntl(client_socket, F_SETFL, flags | O_NONBLOCK) == -1) {
-        throw std::exception();
+        std::string message{"fail to create socket: "};
+        message.append(std::strerror(errno));
+        throw custom_exception{message};
     }
 
     const int set = 1;

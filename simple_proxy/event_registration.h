@@ -46,8 +46,10 @@ struct event_registration
 
     void change_function(handler&& hand) {
         handler_ = std::move(hand);
-        if (is_listened && is_valid())
-            queue->event(static_cast<size_t>(ident), filter, EV_ADD | flags, fflags, data, &handler_);
+        bool temp = is_listened;
+        stop_listen();
+        if (temp && is_valid())
+            resume_listen();
     }
     
     inline bool is_valid() const {

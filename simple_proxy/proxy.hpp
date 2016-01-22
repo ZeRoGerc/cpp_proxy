@@ -16,12 +16,36 @@
 #include "tcp_connection.hpp"
 #include "event_registration.h"
 #include "lru_cache.hpp"
+#include "custom_exception.hpp"
+
+struct main_server {
+public:
+    main_server(int port);
+    
+    main_server& operator=(main_server const&) = delete;
+    main_server(main_server const&) = delete;
+    
+    main_server& operator=(main_server&&) = default;
+    main_server(main_server&&) = default;
+    
+    ~main_server() {
+        close(server_socket);
+    }
+    
+    int get_socket() {
+        return server_socket;
+    }
+private:
+    int server_socket;
+    int port;
+};
+
 
 struct tcp_connection;
 
 struct proxy {
 public:
-    proxy(event_queue* queue, int descriptor);
+    proxy(event_queue* queue);
     ~proxy();
     
     proxy(proxy const&) = delete;
@@ -35,8 +59,8 @@ public:
 private:
     void hard_stop();
     
+    main_server connect_server;
     event_queue* queue;
-    int descriptor;
     
     bool work = true;
     bool soft_exit = false;

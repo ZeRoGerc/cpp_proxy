@@ -3,7 +3,6 @@
 //
 
 #include "proxy_client.h"
-#include "http_parse.hpp"
 
 proxy_client::proxy_client(std::string const& ip, std::string const& host, size_t port)
         : client_socket(ip, port), host(host) {}
@@ -25,8 +24,7 @@ std::string proxy_client::read(size_t len) {
     ssize_t new_len = ::recv(get_socket(), buffer, len, 0);
     if (new_len == -1) {
         delete [] buffer;
-        std::cout << errno << ' ' << std::strerror(errno) << std::endl;
-        throw std::exception();
+        return "";
     }
     
     std::string result = std::string(buffer, static_cast<unsigned long long>(new_len));

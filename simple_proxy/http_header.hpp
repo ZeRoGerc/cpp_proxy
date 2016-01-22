@@ -11,6 +11,15 @@
 
 #include <stdio.h>
 #include <string>
+#include <sstream>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <fcntl.h>
+
 
 struct http_header {
     enum class State {READING, READED, COMPLETE};
@@ -19,6 +28,9 @@ struct http_header {
     http_header (http_header const&) = delete;
     http_header& operator=(http_header const&) = delete;
 
+    http_header (http_header&&) = default;
+    http_header& operator=(http_header&&) = default;
+    
     http_header() {}
 
     http_header(std::string initial) {
@@ -77,9 +89,7 @@ struct http_header {
     
     void add_line(std::string const& key, std::string const value);
     
-    void init_properties();
-    
-    
+    std::string static get_ip_by_host(std::string const& host, size_t port = 80);
 private:
     std::string data;
     std::string head;
@@ -92,6 +102,7 @@ private:
     void transform_to_relative();
     void parse_content_length();
     void parse_is_chunked_encoding();
+    void init_properties();
 };
 
 #endif /* http_header_hpp */
