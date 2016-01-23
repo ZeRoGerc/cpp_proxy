@@ -14,7 +14,18 @@
 #include <sys/fcntl.h>
 
 main_server::main_server(int port) : port(port) {
-    server_socket = socket(AF_INET, SOCK_STREAM, NULL);
+    server_socket = socket(AF_INET, SOCK_STREAM, 0);
+    
+    const int set = 1;
+    if (setsockopt(server_socket, SOL_SOCKET, SO_REUSEPORT, &set, sizeof(set)) == -1) {
+        throw custom_exception("fail to reuse port");
+    };
+    
+    sockaddr_in server;
+    
+    server.sin_family = AF_INET;
+    server.sin_port = htons(port);
+    server.sin_addr.s_addr = INADDR_ANY;
     
     int flags;
     if (-1 == (flags = fcntl(server_socket, F_GETFL, 0))) {
@@ -23,12 +34,6 @@ main_server::main_server(int port) : port(port) {
     if (fcntl(server_socket, F_SETFL, flags | O_NONBLOCK) == -1) {
         throw custom_exception("fail to create connect socket");
     }
-    
-    sockaddr_in server;
-    
-    server.sin_family = AF_INET;
-    server.sin_port = htons(port);
-    server.sin_addr.s_addr = INADDR_ANY;
     
     int bnd = bind(server_socket, (struct sockaddr*)&server, sizeof(server));
     if (bnd == -1) {
@@ -41,7 +46,7 @@ main_server::main_server(int port) : port(port) {
 
 proxy::proxy(event_queue* queue)
 : queue(queue)
-, connect_server(main_server{2537})
+, connect_server(main_server{2532})
 , reg(
       queue,
       connect_server.get_socket(),
@@ -58,7 +63,7 @@ proxy::proxy(event_queue* queue)
               
               (*iter)->set_deleter(deleter);
               (*iter)->start();
-          } catch (std::exception e) {
+          } catch (std::exception const& e) {
               std::cerr << e.what() << std::endl;
           }
       },
@@ -80,7 +85,6 @@ proxy::~proxy() {
     reg.stop_listen();
     sigint.stop_listen();
     queue->stop_resolve();
-    
 }
 
 void proxy::main_loop() {

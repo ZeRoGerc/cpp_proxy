@@ -59,10 +59,10 @@ private:
     event_queue* queue;
     handler handler_;
     int ident = -1;
-    int16_t filter = NULL;
-    uint16_t flags = NULL;
-    uint32_t fflags = NULL;
-    intptr_t data = NULL;
+    int16_t filter = 0;
+    uint16_t flags = 0;
+    uint32_t fflags = 0;
+    intptr_t data = 0;
 
     bool is_listened = false;
 };

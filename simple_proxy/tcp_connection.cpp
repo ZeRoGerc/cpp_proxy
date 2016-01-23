@@ -16,6 +16,7 @@ const std::string NOT_FOUND = "HTTP/1.1 404 Not Found\r\nServer: proxy\r\nConten
 
 const std::string buffer::chunked_end{"0\r\n\r\n"};
 const int tcp_connection::CHUNK_SIZE = 1024;
+const int tcp_connection::BUFFER_SIZE = 16384;
 
 std::string get_field(std::string const& data, std::string const& field) {
     size_t pos = data.find(field);
@@ -112,7 +113,7 @@ tcp_connection::tcp_connection(event_queue* q, cache_type* cache, int descriptor
                                  queue,
                                  client->get_socket(),
                                  EVFILT_TIMER,
-                                 NULL,
+                                 0,
                                  NOTE_SECONDS,
                                  600,
                                  handler{
@@ -234,8 +235,7 @@ void tcp_connection::get_client_header(struct kevent &event) {
                     /*
                      during resolve connection couldn't die
                      but if we need to determine if connection is in valid state after resolve
-                     we could check state of client
-                     if client doesn't exist it means that connection die
+                     we could check if deleted is true
                      */
 
                     try {
@@ -264,6 +264,10 @@ void tcp_connection::get_client_header(struct kevent &event) {
                         }});
                         
                     } catch (...) {
+                        if (deleted) {
+                            disconnect();
+                            return;
+                        }
                         queue->execute_in_main(
                                                task{[this]()
                                                    {
@@ -294,7 +298,7 @@ void tcp_connection::handle_client_write(struct kevent& event) {
     //if server finish sending and client receive all available data
     if (body_buffer.size() == 0 && body_buffer.amount_of_available_data() == 0) {
         client->stop_write();
-        if (current_url.size() != 0) {
+        if (current_url.size() != 0 && body_buffer.get_all_data().size() < BUFFER_SIZE) {
             //cache responce
             cache->append(current_url, body_buffer.get_all_data());
         }

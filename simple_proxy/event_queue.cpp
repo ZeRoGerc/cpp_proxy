@@ -74,12 +74,16 @@ event_queue::event_queue() {
     main_thread_events_handler = handler {
         [this](struct kevent& event) {
             assert(main_thread_tasks.size() != 0);
-            char* buffer = new char(1);
-            read(pipe_out, buffer, 1);
-            delete [] buffer;
-            if (main_thread_tasks.size() != 0)
-                main_thread_tasks.back()();
+            char buffer;
+            read(pipe_out, &buffer, sizeof(buffer));
+            
+            std::unique_lock<std::mutex> locker{mutex};
+            if (main_thread_tasks.size() != 0) {
+                auto f = main_thread_tasks.back();
                 main_thread_tasks.pop_back();
+                locker.unlock();
+                f();
+            }
         }
     };
     
@@ -93,12 +97,12 @@ event_queue::~event_queue() {
 
 
 void event_queue::delete_event(size_t ident, int16_t filter) {
-    event(ident, filter, EV_DELETE, NULL, NULL, nullptr);
+    event(ident, filter, EV_DELETE, 0, 0, nullptr);
 }
 
 
 void event_queue::add_event(size_t ident, int16_t filter, handler* hand) {
-    event(ident, filter, EV_ADD, NULL, NULL, hand);
+    event(ident, filter, EV_ADD, 0, 0, hand);
 }
 
 
@@ -152,6 +156,6 @@ void event_queue::event(size_t ident, int16_t filter, uint16_t flags, uint32_t f
     }
     
     if ((flags & EV_DELETE) && (deleted_events.find(std::make_pair(ident, filter)) == deleted_events.end())) {
-        deleted_events.insert(std::make_pair(ident, filter));
+            deleted_events.insert(std::make_pair(ident, filter));
     }
 }
