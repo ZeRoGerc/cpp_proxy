@@ -69,3 +69,12 @@ event_registration& event_registration::operator=(event_registration&& other)
     
     return *this;
 }
+
+
+void event_registration::change_function(handler &&hand) {
+    handler_ = std::move(hand);
+    bool temp = is_listened;
+    stop_listen();
+    if (temp && is_valid())
+        resume_listen();
+}

@@ -56,6 +56,8 @@ private:
 struct event_queue {
 public:
     event_queue();
+    
+    ~event_queue();
 
     void delete_event(size_t ident, int16_t filter);
 

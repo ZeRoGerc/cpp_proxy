@@ -41,7 +41,7 @@ main_server::main_server(int port) : port(port) {
 
 proxy::proxy(event_queue* queue)
 : queue(queue)
-, connect_server(main_server{2539})
+, connect_server(main_server{2537})
 , reg(
       queue,
       connect_server.get_socket(),
@@ -91,7 +91,6 @@ void proxy::main_loop() {
             }
             deleted.clear();
             
-            std::cout << "CONNECTIONS " << connections.size() << std::endl;
             if (int amount = queue->occurred()) {
                 queue->execute(amount);
             }
@@ -115,7 +114,4 @@ void proxy::hard_stop() {
 void proxy::soft_stop() {
     soft_exit = true;
     reg.stop_listen();
-    
-    //finish working with existing connections
-    main_loop();
 }

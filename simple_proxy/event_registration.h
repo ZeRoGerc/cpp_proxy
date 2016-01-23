@@ -25,32 +25,26 @@ struct event_registration
         stop_listen();
     }
 
-    void stop_listen() {
+    inline void stop_listen() {
         if (is_listened && is_valid()) {
             queue->event(static_cast<size_t>(ident), filter, EV_DELETE | flags, fflags, data, &handler_);
             is_listened = false;
         }
     }
 
-    void resume_listen() {
+    inline void resume_listen() {
         if (!is_listened && is_valid()) {
             queue->event(static_cast<size_t>(ident), filter, EV_ADD | flags, fflags, data, &handler_);
             is_listened = true;
         }
     }
     
-    void refresh() {
+    inline void refresh() {
         stop_listen();
         resume_listen();
     }
 
-    void change_function(handler&& hand) {
-        handler_ = std::move(hand);
-        bool temp = is_listened;
-        stop_listen();
-        if (temp && is_valid())
-            resume_listen();
-    }
+    void change_function(handler&& hand);
     
     inline bool is_valid() const {
         return ident != -1;

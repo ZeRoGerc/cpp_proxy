@@ -86,20 +86,18 @@ event_queue::event_queue() {
     add_event(pipe_out, EVFILT_READ, &main_thread_events_handler);
 }
 
+event_queue::~event_queue() {
+    close(pipe_in);
+    close(pipe_out);
+}
+
 
 void event_queue::delete_event(size_t ident, int16_t filter) {
-    
-    if (deleted_events.find(std::make_pair(ident, filter)) == deleted_events.end()) {
-        std::cout << "delete " << ident << ' ' << filter << std::endl;
-        event(ident, filter, EV_DELETE, NULL, NULL, nullptr);
-    } else {
-        std::cout << "already deleted " << ident << ' ' << filter << std::endl;
-    }
+    event(ident, filter, EV_DELETE, NULL, NULL, nullptr);
 }
 
 
 void event_queue::add_event(size_t ident, int16_t filter, handler* hand) {
-    std::cout << "add " << ident << ' ' << filter << std::endl;
     event(ident, filter, EV_ADD, NULL, NULL, hand);
 }
 
@@ -139,8 +137,6 @@ void event_queue::execute(int amount) {
 
 void event_queue::stop_resolve() {
     background_tasks.stop();
-    close(pipe_in);
-    close(pipe_out);
 }
 
 
@@ -155,7 +151,7 @@ void event_queue::event(size_t ident, int16_t filter, uint16_t flags, uint32_t f
         throw custom_exception(message);
     }
     
-    if (flags & EV_DELETE) {
+    if ((flags & EV_DELETE) && (deleted_events.find(std::make_pair(ident, filter)) == deleted_events.end())) {
         deleted_events.insert(std::make_pair(ident, filter));
     }
 }

@@ -16,7 +16,6 @@ const std::string NOT_FOUND = "HTTP/1.1 404 Not Found\r\nServer: proxy\r\nConten
 
 const std::string buffer::chunked_end{"0\r\n\r\n"};
 const int tcp_connection::CHUNK_SIZE = 1024;
-const int tcp_connection::BUFFER_SIZE = 16384;
 
 std::string get_field(std::string const& data, std::string const& field) {
     size_t pos = data.find(field);
@@ -209,7 +208,7 @@ void tcp_connection::get_client_header(struct kevent &event) {
 
     std::string chunk = client->read(CHUNK_SIZE);
 
-    std::cerr << "client header send " << client->get_socket() << ' '  << chunk << std::endl;
+//    std::cerr << "client header send " << client->get_socket() << ' '  << chunk << std::endl;
     header.append(chunk);
 
     if (header.get_state() == http_header::State::COMPLETE) {
@@ -230,7 +229,6 @@ void tcp_connection::get_client_header(struct kevent &event) {
             header.add_line("If-None-Match", get_field(cache->get(current_url), "ETag"));
         }
         
-        client_s = client->get_socket();
         task resolve {
                 [this]() {
                     /*
@@ -249,11 +247,10 @@ void tcp_connection::get_client_header(struct kevent &event) {
                         queue->execute_in_main(task{[this, host, ip, port, content_len](){
                             if (deleted) {
                                 //if state is invalid just delete
-                                std::cout << "after resolve client deleted\n";
                                 disconnect();
                                 return;
                             }
-                            std::cout << "RESOLVED " << client_s << std::endl;
+//                            std::cout << "RESOLVED " << client_s << std::endl;
                             bool is_ok = init_server(ip, host, port);
                             if (!is_ok) {
                                 body_buffer = buffer(NOT_FOUND, static_cast<int>(NOT_FOUND.size()));
@@ -288,10 +285,7 @@ void tcp_connection::handle_client_write(struct kevent& event) {
     if (handle_client_disconnect(event))
         return;
 
-    
     size_t len = client->send(body_buffer.get());
-    assert(len != -1);
-    
     
 //    std::cerr << "client receive " << client->get_socket() << ' ' << body_buffer.get() << std::endl;
     
@@ -362,7 +356,6 @@ void tcp_connection::handle_server_write(struct kevent& event) {
     
     
     size_t len = server->send(body_buffer.get());
-    assert(len != -1);
     
 //    std::cout << "server receive " << server->get_socket() << ' ' << body_buffer.get(len) << std::endl;
     body_buffer.pop_front(len);
@@ -402,28 +395,28 @@ bool tcp_connection::handle_client_disconnect(struct kevent& event) {
 
 void tcp_connection::switch_state(State new_state) {
     state = new_state;
-    std::cout << "switch_state: ";
-    switch (new_state) {
-        case State::RECEIVE_CLIENT:
-            std::cout << "RECEIVE_CLIENT ";
-            break;
-        case State::RESOLVE:
-            std::cout << "RESOLVE ";
-            break;
-        case State::SEND_SERVER:
-            std::cout << "SEND_SERVER ";
-            break;
-        case State::RECEIVE_SERVER:
-            std::cout << "RECEIVE_SERVER ";
-            break;
-        case State::SEND_CLIENT:
-            std::cout << "SEND_CLIENT ";
-            break;
-    }
-    
-    if (client) std::cout << "client: " << client->get_socket() << ' ';
-    if (server) std::cout << "server: " << server->get_socket() << ' ';
-    std::cout << std::endl;
+//    std::cout << "switch_state: ";
+//    switch (new_state) {
+//        case State::RECEIVE_CLIENT:
+//            std::cout << "RECEIVE_CLIENT ";
+//            break;
+//        case State::RESOLVE:
+//            std::cout << "RESOLVE ";
+//            break;
+//        case State::SEND_SERVER:
+//            std::cout << "SEND_SERVER ";
+//            break;
+//        case State::RECEIVE_SERVER:
+//            std::cout << "RECEIVE_SERVER ";
+//            break;
+//        case State::SEND_CLIENT:
+//            std::cout << "SEND_CLIENT ";
+//            break;
+//    }
+//    
+//    if (client) std::cout << "client: " << client->get_socket() << ' ';
+//    if (server) std::cout << "server: " << server->get_socket() << ' ';
+//    std::cout << std::endl;
     
     switch (new_state) {
         case State::RECEIVE_CLIENT:

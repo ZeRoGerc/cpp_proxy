@@ -29,10 +29,6 @@ public:
     lru_cache& operator=(lru_cache&&) = default;
     
     void append(K const& key, V&& value) {
-        std::cout << "CACHED " << std::endl;
-//        std::cout << key << std::endl;
-//        std::cout << value << std::endl;
-        
         if (is_cached(key)) {
             map[key]->second = std::forward<V>(value);
             lst.splice(lst.begin(), lst, map[key]);
@@ -54,7 +50,6 @@ public:
     
     const V& get(const K& key) const {
         auto it = map.find(key);
-        std::cout << "FROM CACHE " << key << std::endl;
         if (it == map.end()) {
             throw std::exception();
         } else {

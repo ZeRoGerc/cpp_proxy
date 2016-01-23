@@ -83,7 +83,6 @@ private:
 
     enum class State {RECEIVE_CLIENT, RESOLVE, SEND_SERVER, RECEIVE_SERVER, SEND_CLIENT};
 
-    int client_s;
     State state;
     
     std::unique_ptr<proxy_client> client;
