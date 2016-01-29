@@ -5,7 +5,7 @@
 #include "proxy_client.h"
 
 proxy_client::proxy_client(std::string const& ip, std::string const& host, size_t port)
-        : client_socket(ip, port), host(host) {}
+: client_socket(ip, port), host(host) {std::cout << host << std::endl;}
 
 
 proxy_client::proxy_client(int descriptor)

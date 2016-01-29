@@ -46,14 +46,16 @@ main_server::main_server(int port) : port(port) {
 
 proxy::proxy(event_queue* queue)
 : queue(queue)
-, connect_server(main_server{2532})
+, connect_server(main_server{2539})
+, responce_cache(100)
+, resolver_cache(10000)
 , reg(
       queue,
       connect_server.get_socket(),
       EVFILT_READ,
       [this, queue](struct kevent& event) {
           try {
-              auto temp = std::unique_ptr<tcp_connection>(new tcp_connection(queue, &responce_cache, connect_server.get_socket()));
+              auto temp = std::unique_ptr<tcp_connection>(new tcp_connection(queue, &responce_cache, &resolver_cache, connect_server.get_socket()));
               
               auto iter = connections.insert(std::move(temp)).first;
               

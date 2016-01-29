@@ -12,15 +12,19 @@
 #include <stdio.h>
 #include <map>
 #include <list>
+#include <mutex>
+#include <thread>
 
 template<typename K, typename V>
 struct lru_cache {
 private:
-    static const size_t SIZE = 100;
     std::list< std::pair<K, V> > lst;
     std::map<K,decltype(lst.begin())> map;
+    size_t max_size = 1;
+    
+    mutable std::mutex mutex;
 public:
-    lru_cache() {}
+    lru_cache(size_t size): max_size(size) {}
     
     lru_cache(lru_cache const&) = delete;
     lru_cache& operator=(lru_cache const&) = delete;
@@ -28,27 +32,33 @@ public:
     lru_cache(lru_cache&&) = default;
     lru_cache& operator=(lru_cache&&) = default;
     
-    void append(K const& key, V&& value) {
-        if (is_cached(key)) {
-            map[key]->second = std::forward<V>(value);
+    template<typename VV>
+    void append(K const& key, VV&& value) {
+        std::unique_lock<std::mutex> lock(mutex);
+        
+        if (map.find(key) != map.end()) {
+            map[key]->second = std::forward<VV>(value);
             lst.splice(lst.begin(), lst, map[key]);
         } else {
-            lst.emplace_front(key, std::forward<V>(value));
+            lst.emplace_front(key, std::forward<VV>(value));
         }
         
         map[key] = lst.begin();
         
-        if (lst.size() > SIZE) {
+        if (lst.size() > max_size) {
             map.erase(lst.back().first);
             lst.pop_back();
         }
     }
     
     inline bool is_cached(const K& key) const {
+        std::unique_lock<std::mutex> lock(mutex);
         return map.find(key) != map.end();
     }
     
     const V& get(const K& key) const {
+        std::unique_lock<std::mutex> lock(mutex);
+        
         auto it = map.find(key);
         if (it == map.end()) {
             throw std::exception();

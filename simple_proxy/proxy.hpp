@@ -72,6 +72,7 @@ private:
     std::vector<decltype(connections.begin())> deleted;
     
     lru_cache<std::string, std::string> responce_cache;
+    lru_cache<std::string, std::string> resolver_cache;
 };
 
 #endif /* proxy_hpp */

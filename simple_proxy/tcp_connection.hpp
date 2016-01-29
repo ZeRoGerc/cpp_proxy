@@ -88,7 +88,8 @@ private:
     std::unique_ptr<proxy_client> client;
     std::unique_ptr<proxy_client> server;
     event_queue* queue;
-    cache_type* cache;
+    cache_type* responce_cache;
+    cache_type* resolver_cache;
     
     event_registration client_timer;
     
@@ -138,7 +139,7 @@ private:
 
 public:
     //Don't forget to set callback and deleter after constructor
-    tcp_connection(event_queue* queue, cache_type* cache, int descriptor);
+    tcp_connection(event_queue* queue, cache_type* responce_cache, cache_type* resolver_cache, int descriptor);
     
     ~tcp_connection();
 

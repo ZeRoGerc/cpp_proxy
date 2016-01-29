@@ -105,8 +105,8 @@ size_t buffer::size() const {
     return data.size() - readed;
 }
 
-tcp_connection::tcp_connection(event_queue* q, cache_type* cache, int descriptor)
-    : queue(q), cache(cache), client(new proxy_client(descriptor)), server(nullptr)
+tcp_connection::tcp_connection(event_queue* q, cache_type* responce_cache, cache_type* resolver_cache, int descriptor)
+    : queue(q), responce_cache(responce_cache), resolver_cache(resolver_cache), client(new proxy_client(descriptor)), server(nullptr)
 {
     client_timer = std::move(
                              event_registration {
@@ -226,8 +226,8 @@ void tcp_connection::get_client_header(struct kevent &event) {
             current_url = "";
         }
         
-        if (cache->is_cached(current_url)) {
-            header.add_line("If-None-Match", get_field(cache->get(current_url), "ETag"));
+        if (responce_cache->is_cached(current_url)) {
+            header.add_line("If-None-Match", get_field(responce_cache->get(current_url), "ETag"));
         }
         
         task resolve {
@@ -243,7 +243,12 @@ void tcp_connection::get_client_header(struct kevent &event) {
                         size_t port = header.retrieve_port();
                         // since we pass data as header + body
                         size_t content_len = header.get_content_length() + header.size();
-                        std::string ip = http_header::get_ip_by_host(host, port);
+                        std::string ip;
+                        if (resolver_cache->is_cached(host)) {
+                            ip = resolver_cache->get(host);
+                        } else {
+                            ip = http_header::get_ip_by_host(host, port);
+                        }
                         queue->execute_in_main(task{[this, host, ip, port, content_len](){
                             if (deleted) {
                                 //if state is invalid just delete
@@ -257,6 +262,9 @@ void tcp_connection::get_client_header(struct kevent &event) {
                                 switch_state(State::SEND_CLIENT);
                                 return;
                             }
+                            //if pair host-ip is ok, cache
+                            responce_cache->append(host, ip);
+                            
                             //here we have valid server and valid client
                             body_buffer = buffer(header.get_string_representation(), static_cast<int>(content_len));
                             
@@ -300,7 +308,7 @@ void tcp_connection::handle_client_write(struct kevent& event) {
         client->stop_write();
         if (current_url.size() != 0 && body_buffer.get_all_data().size() < BUFFER_SIZE) {
             //cache responce
-            cache->append(current_url, body_buffer.get_all_data());
+            responce_cache->append(current_url, body_buffer.get_all_data());
         }
         switch_state(State::RECEIVE_CLIENT); //start new request
     }
@@ -331,8 +339,8 @@ void tcp_connection::get_server_header(struct kevent &event) {
          Parse answer from server
          */
         
-        if (cache->is_cached(current_url) && header.find_in_head("304")) {
-            body_buffer = buffer(cache->get(current_url));
+        if (responce_cache->is_cached(current_url) && header.find_in_head("304")) {
+            body_buffer = buffer(responce_cache->get(current_url));
             switch_state(State::SEND_CLIENT);
             return;
         }
