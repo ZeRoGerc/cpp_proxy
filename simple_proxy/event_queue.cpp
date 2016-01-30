@@ -9,6 +9,8 @@
 
 background_tasks_handler::background_tasks_handler(): work(true) {
     for (int i = 0; i < THREADS_AMOUNT; i++) {
+        // TODO: what will happen if constructor of std::thread fails
+        // or push_back fails?
         threads.push_back(std::thread(
                                       [this](){
                                           execute();
@@ -133,7 +135,7 @@ void event_queue::execute(int amount) {
         
         if (deleted_events.size() == 0 || deleted_events.find(std::make_pair(evlist[i].ident, evlist[i].filter)) == deleted_events.end()) {
             handler* hand = static_cast<handler*>(evlist[i].udata);
-            hand->operator()(evlist[i]);
+            (*hand)(evlist[i]);
         }
     }
 }
