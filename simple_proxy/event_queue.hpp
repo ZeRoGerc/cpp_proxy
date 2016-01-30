@@ -49,7 +49,7 @@ private:
     std::queue<task> poll;
     std::condition_variable condition;
     std::mutex mutex;
-    bool work;
+    bool work; // TODO: std::atomic<bool>
     std::vector<std::thread> threads;
 };
 

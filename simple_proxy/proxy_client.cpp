@@ -20,14 +20,11 @@ size_t proxy_client::send(std::string const& request) {
 }
 
 std::string proxy_client::read(size_t len) {
-    char* buffer = new char[len];
-    ssize_t new_len = ::recv(get_socket(), buffer, len, 0);
+    std::vector<int> buf(len);
+    ssize_t new_len = ::recv(get_socket(), buf.data(), len, 0);
     if (new_len == -1) {
-        delete [] buffer;
         return "";
     }
     
-    std::string result = std::string(buffer, static_cast<unsigned long long>(new_len));
-    delete [] buffer;
-    return result.substr(0, new_len);
+    return std::string(buffer.begin(), buffer().begin() + new_len);
 }

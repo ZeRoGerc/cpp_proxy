@@ -185,12 +185,8 @@ std::string  http_header::get_ip_by_host(std::string const& host, size_t port) {
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = PF_INET;
     hints.ai_socktype = SOCK_STREAM;
-    
-    char* char_port = new char[15];
-    snprintf(char_port, 15, "%d", static_cast<int>(port));
-    
-    error = getaddrinfo(host.c_str(), char_port, &hints, &res0);
-    delete char_port;
+        
+    error = getaddrinfo(host.c_str(), std::to_string(port).c_str(), &hints, &res0);
     
     if (error) {
         std::string message{"getaddrinfo failed: "};
