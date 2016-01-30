@@ -20,11 +20,11 @@ size_t proxy_client::send(std::string const& request) {
 }
 
 std::string proxy_client::read(size_t len) {
-    std::vector<int> buf(len);
+    std::vector<char> buf(len);
     ssize_t new_len = ::recv(get_socket(), buf.data(), len, 0);
     if (new_len == -1) {
         return "";
     }
     
-    return std::string(buffer.begin(), buffer().begin() + new_len);
+    return std::string(buf.begin(), buf.begin() + new_len);
 }

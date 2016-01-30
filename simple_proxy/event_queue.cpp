@@ -8,14 +8,23 @@
 #include "custom_exception.hpp"
 
 background_tasks_handler::background_tasks_handler(): work(true) {
-    for (int i = 0; i < THREADS_AMOUNT; i++) {
-        // TODO: what will happen if constructor of std::thread fails
-        // or push_back fails?
-        threads.push_back(std::thread(
-                                      [this](){
-                                          execute();
-                                      }
-                          ));
+    try {
+        for (int i = 0; i < THREADS_AMOUNT; i++) {
+            threads.push_back(std::thread(
+                                          [this](){
+                                              execute();
+                                          }
+                              ));
+        }
+    } catch(std::exception& e) {
+        std::cerr << e.what();
+        
+        work = false;
+        for (auto& thread: threads) {
+            if (thread.joinable()) {
+                thread.join();
+            }
+        }
     }
 }
 
