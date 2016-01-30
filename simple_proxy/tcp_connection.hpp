@@ -131,7 +131,6 @@ private:
     bool handle_server_disconnect(struct kevent& event);
     bool handle_client_disconnect(struct kevent& event);
     
-    //event_registration is_listen is always false after finishing
     void set_read_function(std::unique_ptr<proxy_client>&, handler);
     void set_write_function(std::unique_ptr<proxy_client>&, handler);
     

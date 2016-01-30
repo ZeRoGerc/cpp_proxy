@@ -20,6 +20,9 @@ public:
     proxy_client(proxy_client const&) = delete;
     proxy_client& operator=(proxy_client const&) = delete;
 
+    proxy_client(proxy_client&&) = delete;
+    proxy_client& operator=(proxy_client&&) = delete;
+    
     int get_socket() const {
         return client_socket.value();
     }

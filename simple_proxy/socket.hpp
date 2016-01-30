@@ -13,9 +13,12 @@
 
 struct socket {
 public:
-    socket(socket const& other) = delete;
-    socket & operator=(socket const& other) = delete;
-
+    socket(socket const&) = delete;
+    socket& operator=(socket const&) = delete;
+    
+    socket(socket&&) = delete;
+    socket& operator=(socket&&) = delete;
+    
     socket(int descriptor);
     
     socket(std::string const& ip, size_t port);

@@ -16,51 +16,38 @@
 #include <cmath>
 #include <string>
 
+void set_socket_properties(int client_socket) {
+    if (client_socket == -1) {
+        std::string message{"fail to create socket: "};
+        message.append(std::strerror(errno));
+        throw custom_exception(message);
+    }
+    
+    int flags;
+    if (-1 == (flags = fcntl(client_socket, F_GETFL, 0))) {
+        flags = 0;
+    }
+    if (fcntl(client_socket, F_SETFL, flags | O_NONBLOCK) == -1) {
+        std::string message{"fail to create socket: "};
+        message.append(std::strerror(errno));
+        throw custom_exception(message);
+    }
+    
+    const int set = 1;
+    setsockopt(client_socket, SOL_SOCKET, SO_NOSIGPIPE, &set, sizeof(set));
+}
+
 socket::socket(int descriptor) {
     sockaddr client_addr;
     socklen_t client_size = sizeof(sockaddr);
     client_socket = accept(descriptor, &client_addr, &client_size);
-//    std::cout << "connected socket " << client_socket << std::endl;
-    
-    if (client_socket == -1) {
-        std::string message{"fail to create socket: "};
-        message.append(std::strerror(errno));
-        throw custom_exception(message);
-    }
-    
-    int flags;
-    if (-1 == (flags = fcntl(client_socket, F_GETFL, 0))) {
-        flags = 0;
-    }
-    if (fcntl(client_socket, F_SETFL, flags | O_NONBLOCK) == -1) {
-        std::string message{"fail to create socket: "};
-        message.append(std::strerror(errno));
-        throw custom_exception(message);
-    }
+    set_socket_properties(client_socket);
 }
 
 socket::socket(std::string const& ip, size_t port) {
     client_socket = ::socket(AF_INET, SOCK_STREAM, 0);
-    if (client_socket == -1) {
-        std::string message{"fail to create socket: "};
-        message.append(std::strerror(errno));
-        throw custom_exception(message);
-    }
-//    std::cout << "connected socket " << client_socket << std::endl;
-
-    int flags;
-    if (-1 == (flags = fcntl(client_socket, F_GETFL, 0))) {
-        flags = 0;
-    }
-    if (fcntl(client_socket, F_SETFL, flags | O_NONBLOCK) == -1) {
-        std::string message{"fail to create socket: "};
-        message.append(std::strerror(errno));
-        throw custom_exception{message};
-    }
-
-    const int set = 1;
-    setsockopt(client_socket, SOL_SOCKET, SO_NOSIGPIPE, &set, sizeof(set));
-
+    set_socket_properties(client_socket);
+    
     sockaddr_in serv;
     serv.sin_family = AF_INET;
     serv.sin_addr.s_addr = inet_addr(ip.c_str());
