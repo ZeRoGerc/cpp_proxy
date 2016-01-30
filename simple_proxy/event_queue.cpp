@@ -16,15 +16,15 @@ background_tasks_handler::background_tasks_handler(): work(true) {
                                           }
                               ));
         }
-    } catch(std::exception& e) {
-        std::cerr << e.what();
-        
+    } catch(...) {
         work = false;
         for (auto& thread: threads) {
             if (thread.joinable()) {
                 thread.join();
             }
         }
+        
+        throw;
     }
 }
 
